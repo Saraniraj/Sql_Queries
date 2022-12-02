@@ -1,0 +1,2 @@
+use eVendor go
+exec sp_helptext sp_SaveVom_FabricTransaction_Ledger
