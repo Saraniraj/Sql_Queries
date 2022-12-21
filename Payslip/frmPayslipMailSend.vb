@@ -533,7 +533,13 @@ Public Class frmPayslipMailSend
     Private Sub BtnMailsend_Click(sender As Object, e As EventArgs) Handles BtnMailsend.Click
        
 
+        Try
+            Generate_Payslip()
+            Exit Sub
+        Catch ex As Exception
+            Show_Message(ex.Message)
 
+        End Try
 
 
 
@@ -598,7 +604,8 @@ Public Class frmPayslipMailSend
             crysview.CrystalReportViewer1.Refresh()
             ' ''crysrep.PrintToPrinter(1, False, 1, 1)
             crysview.CrystalReportViewer1.Zoom(100)
-            '     crysview.Show()
+                    crysview.Show()
+                    Exit Sub
 
             crysrep.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, "D:\Reports\" + mdates + "_" + mempcode + "Payslip.pdf")
             Dim mfilename As String
@@ -607,7 +614,7 @@ Public Class frmPayslipMailSend
             Dim msubject As String = "Salary Slip of " + mname + "for " + mdates + "Regards"
                     If mempcode = "BR620" Then
                         'PayslipMailSend(mname, mdates, memailid, msubject, mfilename)
-                        Employee_Payslip_MailSend(mname, mdates, memailid, msubject, mfilename)
+                        '     Employee_Payslip_MailSend(mname, mdates, memailid, msubject, mfilename)
 
 
                     Else
@@ -692,5 +699,88 @@ Public Class frmPayslipMailSend
             Show_Message(ex.Message.ToString())
         End Try
     End Function
+
+    Private Sub Generate_Payslip()
+        Dim mdates As String = ""
+        mdates = Format(Dtpfromdate.Value, "MMMM-yyyy")
+        Try
+
+            For i As Integer = 0 To Me.dgvReport.Rows.Count - 1
+                If Convert.ToBoolean(Me.dgvReport.Rows(i).Cells(0).Value = True) Then
+                    Text = " Attendance Starts Successfully."
+
+
+
+                    'Check condition
+
+                    Dim mempcode As String
+                    mempcode = dgvReport.Rows(i).Cells(2).Value
+                    Dim memailid = dgvReport.Rows(i).Cells(4).Value
+                    Dim mname = dgvReport.Rows(i).Cells(2).Value
+                    Dim crysview As New frmRepView
+                    Dim crysrep As New ReportDocument
+
+                    Dim dsMain As New DataSet
+                    Dim dsEarning As New DataSet
+                    Dim dsDeductions As New DataSet
+                    dsMain = Nothing
+                    dsMain = New DataSet
+
+                    SSQL = ""
+                    SSQL = "select *  from  Fun_PRoll_Payslip ('2022-11-30' )   "
+
+                    'SSQL = "select *  from  Fun_PRoll_Payslip ('2022-11-30' )   where   empcode    ='" & mempcode & " '"
+                    dsMain = ReturnMultipleValue(SSQL, mvarDbasename)
+
+                    'dsMain = mobjclssalaryreport.GetEmpPayslip_Report(mselectedvalues, sex, ATM, CbxEmpname.Text, mempcode, mFromDate, mvarEndda 
+                    If dsMain.Tables(0).Rows.Count <= 0 Then Exit Sub
+
+                    SSQL = ""
+                    ''SSQL = "select *  from  Fun_PRoll_Earnings ('2022-11-30'  ) where   empcode    ='" & mempcode & " '"
+
+                    SSQL = "select *  from  Fun_PRoll_Earnings ('2022-11-30'  ) "
+                    dsEarning = ReturnMultipleValue(SSQL, mvarDbasename)
+
+                    SSQL = ""
+                    ''    SSQL = "select *  from  Fun_PRoll_Deduction ('2022-11-30' )  where   empcode    ='" & mempcode & " '"
+
+                    SSQL = "select *  from  Fun_PRoll_Deduction ('2022-11-30' )  "
+                    dsDeductions = ReturnMultipleValue(SSQL, mvarDbasename)
+
+        
+                    If dsMain.Tables(0).Rows.Count <= 0 Then Exit Sub
+                    ''   strFileLocation = mvarReportPath & "\REPORTS\REGULAR\SALES\Sales_Invoice_Export_A4_QR.rpt"
+                    mvarReportName = mvarReportPath & "\REPORTS\HRD\Salary\LS_HRDSalaryPayslip_Model1.rpt"
+
+                    crysview.Text = "Sales Invoice"
+                    crysrep.Load(mvarReportName)
+                    crysrep.SetDataSource(dsMain.Tables(0))
+                    If dsEarning.Tables(0).Rows.Count >= 1 Then
+                        crysrep.Subreports.Item("Earning").SetDataSource(dsEarning.Tables(0))
+                    End If
+                    If dsDeductions.Tables(0).Rows.Count >= 1 Then
+                        crysrep.Subreports.Item("Deduction").SetDataSource(dsDeductions.Tables(0))
+                    End If
+
+                    crysview.CrystalReportViewer1.ReportSource = crysrep
+                    crysview.CrystalReportViewer1.Refresh()
+                    ' ''crysrep.PrintToPrinter(1, False, 1, 1)
+                    crysview.CrystalReportViewer1.Zoom(100)
+                    crysview.Show()
+                    Exit Sub
+
+                  
+                    
+                Else
+
+                End If
+            Next
+             
+
+        Catch ex As Exception
+            Show_Message(ex.Message)
+
+        End Try
+    End Sub
 
 End Class
