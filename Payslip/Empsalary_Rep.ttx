@@ -122,3 +122,5 @@ Adv_Balance		number
 AlreadyPaid		number	
 Current_Advance		number	
 Current_paid		number	
+PHOTO			String	500
+EmpPHOTO			BLOB
