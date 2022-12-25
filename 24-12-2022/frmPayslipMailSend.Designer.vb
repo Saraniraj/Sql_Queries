@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmPayslipMailSend
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,30 +20,24 @@ Partial Class frmPayslipMailSend
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPayslipMailSend))
         Me.toolStripComboBox_RecordPerPage = New System.Windows.Forms.ToolStripComboBox()
-        Me.txt_EmpCode = New System.Windows.Forms.TextBox()
-        Me.lbl_EmployeeCode = New System.Windows.Forms.Label()
-        Me.CbxDepartment = New System.Windows.Forms.ComboBox()
-        Me.lbl_Department = New System.Windows.Forms.Label()
         Me.CbxOrderby = New System.Windows.Forms.ComboBox()
         Me.label6 = New System.Windows.Forms.Label()
-        Me.CbxCategory = New System.Windows.Forms.ComboBox()
-        Me.lbl_Category = New System.Windows.Forms.Label()
         Me.CbxDesignation = New System.Windows.Forms.ComboBox()
         Me.lbl_Company = New System.Windows.Forms.Label()
         Me.btn_Export = New System.Windows.Forms.Button()
         Me.btn_Go = New System.Windows.Forms.Button()
         Me.panel2 = New System.Windows.Forms.Panel()
+        Me.Chkselectall = New System.Windows.Forms.CheckBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.chkall = New System.Windows.Forms.CheckBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Dtpfromdate = New System.Windows.Forms.DateTimePicker()
-        Me.BtnMailsend = New System.Windows.Forms.Button()
-        Me.chkres = New System.Windows.Forms.CheckBox()
-        Me.chkWorking = New System.Windows.Forms.CheckBox()
         Me.toolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.toolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.bindingNavigatorEditItem = New System.Windows.Forms.ToolStripButton()
@@ -59,11 +53,10 @@ Partial Class frmPayslipMailSend
         Me.bindingNavigatorCountItem = New System.Windows.Forms.ToolStripLabel()
         Me.bindingNavigatorAddNewItem = New System.Windows.Forms.ToolStripButton()
         Me.bindingNavigator1 = New System.Windows.Forms.BindingNavigator(Me.components)
-        Me.bindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Chkselectall = New System.Windows.Forms.CheckBox()
         Me.dgvReport = New System.Windows.Forms.DataGridView()
+        Me.bindingSource1 = New System.Windows.Forms.BindingSource(Me.components)
+        Me.lstopt = New System.Windows.Forms.CheckedListBox()
+        Me.btmailsend = New System.Windows.Forms.Button()
         Me.Column1 = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.EmployeeId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmploeeCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -71,31 +64,28 @@ Partial Class frmPayslipMailSend
         Me.FingerId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.CatName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Department = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ShiftGroup = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ConsWages = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Basic = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.wpday = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PFDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.UanNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ESINo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ESIDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ESILocation = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ContactNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.AudharID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.PanNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VoteId = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RCNo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.OldBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Advance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AdvanceLess = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Present = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.GrossAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.PF = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ESI = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LOPAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.NetSalary = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.AdvanceBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.MailID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblCaption = New System.Windows.Forms.Label()
         Me.panel2.SuspendLayout()
         CType(Me.bindingNavigator1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.bindingNavigator1.SuspendLayout()
-        CType(Me.bindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.bindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'toolStripComboBox_RecordPerPage
@@ -106,39 +96,6 @@ Partial Class frmPayslipMailSend
         Me.toolStripComboBox_RecordPerPage.Items.AddRange(New Object() {"All", "10", "20", "50", "100", "500"})
         Me.toolStripComboBox_RecordPerPage.Name = "toolStripComboBox_RecordPerPage"
         Me.toolStripComboBox_RecordPerPage.Size = New System.Drawing.Size(140, 25)
-        '
-        'txt_EmpCode
-        '
-        Me.txt_EmpCode.Location = New System.Drawing.Point(103, 54)
-        Me.txt_EmpCode.Name = "txt_EmpCode"
-        Me.txt_EmpCode.Size = New System.Drawing.Size(127, 22)
-        Me.txt_EmpCode.TabIndex = 61
-        '
-        'lbl_EmployeeCode
-        '
-        Me.lbl_EmployeeCode.AutoSize = True
-        Me.lbl_EmployeeCode.Location = New System.Drawing.Point(13, 62)
-        Me.lbl_EmployeeCode.Name = "lbl_EmployeeCode"
-        Me.lbl_EmployeeCode.Size = New System.Drawing.Size(91, 14)
-        Me.lbl_EmployeeCode.TabIndex = 60
-        Me.lbl_EmployeeCode.Text = "Employee Code"
-        '
-        'CbxDepartment
-        '
-        Me.CbxDepartment.FormattingEnabled = True
-        Me.CbxDepartment.Location = New System.Drawing.Point(328, 27)
-        Me.CbxDepartment.Name = "CbxDepartment"
-        Me.CbxDepartment.Size = New System.Drawing.Size(124, 22)
-        Me.CbxDepartment.TabIndex = 59
-        '
-        'lbl_Department
-        '
-        Me.lbl_Department.AutoSize = True
-        Me.lbl_Department.Location = New System.Drawing.Point(257, 35)
-        Me.lbl_Department.Name = "lbl_Department"
-        Me.lbl_Department.Size = New System.Drawing.Size(72, 14)
-        Me.lbl_Department.TabIndex = 58
-        Me.lbl_Department.Text = "Department"
         '
         'CbxOrderby
         '
@@ -157,23 +114,6 @@ Partial Class frmPayslipMailSend
         Me.label6.Size = New System.Drawing.Size(58, 14)
         Me.label6.TabIndex = 56
         Me.label6.Text = "Order BY"
-        '
-        'CbxCategory
-        '
-        Me.CbxCategory.FormattingEnabled = True
-        Me.CbxCategory.Location = New System.Drawing.Point(103, 27)
-        Me.CbxCategory.Name = "CbxCategory"
-        Me.CbxCategory.Size = New System.Drawing.Size(127, 22)
-        Me.CbxCategory.TabIndex = 55
-        '
-        'lbl_Category
-        '
-        Me.lbl_Category.AutoSize = True
-        Me.lbl_Category.Location = New System.Drawing.Point(13, 35)
-        Me.lbl_Category.Name = "lbl_Category"
-        Me.lbl_Category.Size = New System.Drawing.Size(55, 14)
-        Me.lbl_Category.TabIndex = 54
-        Me.lbl_Category.Text = "Category"
         '
         'CbxDesignation
         '
@@ -215,28 +155,56 @@ Partial Class frmPayslipMailSend
         Me.panel2.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None
         Me.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.panel2.Controls.Add(Me.Button1)
+        Me.panel2.Controls.Add(Me.btmailsend)
+        Me.panel2.Controls.Add(Me.lstopt)
+        Me.panel2.Controls.Add(Me.Chkselectall)
+        Me.panel2.Controls.Add(Me.Label4)
+        Me.panel2.Controls.Add(Me.chkall)
         Me.panel2.Controls.Add(Me.Label1)
         Me.panel2.Controls.Add(Me.Dtpfromdate)
-        Me.panel2.Controls.Add(Me.BtnMailsend)
-        Me.panel2.Controls.Add(Me.chkres)
-        Me.panel2.Controls.Add(Me.chkWorking)
-        Me.panel2.Controls.Add(Me.txt_EmpCode)
-        Me.panel2.Controls.Add(Me.lbl_EmployeeCode)
-        Me.panel2.Controls.Add(Me.CbxDepartment)
-        Me.panel2.Controls.Add(Me.lbl_Department)
         Me.panel2.Controls.Add(Me.CbxOrderby)
         Me.panel2.Controls.Add(Me.label6)
-        Me.panel2.Controls.Add(Me.CbxCategory)
-        Me.panel2.Controls.Add(Me.lbl_Category)
         Me.panel2.Controls.Add(Me.CbxDesignation)
         Me.panel2.Controls.Add(Me.lbl_Company)
         Me.panel2.Controls.Add(Me.btn_Export)
         Me.panel2.Controls.Add(Me.btn_Go)
         Me.panel2.Location = New System.Drawing.Point(0, 72)
         Me.panel2.Name = "panel2"
-        Me.panel2.Size = New System.Drawing.Size(1042, 93)
+        Me.panel2.Size = New System.Drawing.Size(1042, 162)
         Me.panel2.TabIndex = 17
+        '
+        'Chkselectall
+        '
+        Me.Chkselectall.AutoSize = True
+        Me.Chkselectall.Checked = True
+        Me.Chkselectall.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.Chkselectall.Font = New System.Drawing.Font("Bookman Old Style", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Chkselectall.Location = New System.Drawing.Point(11, 139)
+        Me.Chkselectall.Name = "Chkselectall"
+        Me.Chkselectall.Size = New System.Drawing.Size(163, 18)
+        Me.Chkselectall.TabIndex = 25
+        Me.Chkselectall.Text = "Select All Employees"
+        Me.Chkselectall.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Cambria", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(7, 46)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(73, 19)
+        Me.Label4.TabIndex = 78
+        Me.Label4.Text = "Category"
+        '
+        'chkall
+        '
+        Me.chkall.AutoSize = True
+        Me.chkall.Location = New System.Drawing.Point(11, 102)
+        Me.chkall.Name = "chkall"
+        Me.chkall.Size = New System.Drawing.Size(77, 18)
+        Me.chkall.TabIndex = 76
+        Me.chkall.Text = "Select All"
+        Me.chkall.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -255,37 +223,6 @@ Partial Class frmPayslipMailSend
         Me.Dtpfromdate.Name = "Dtpfromdate"
         Me.Dtpfromdate.Size = New System.Drawing.Size(92, 22)
         Me.Dtpfromdate.TabIndex = 70
-        '
-        'BtnMailsend
-        '
-        Me.BtnMailsend.Location = New System.Drawing.Point(843, 58)
-        Me.BtnMailsend.Name = "BtnMailsend"
-        Me.BtnMailsend.Size = New System.Drawing.Size(56, 24)
-        Me.BtnMailsend.TabIndex = 69
-        Me.BtnMailsend.Text = "Mail Send"
-        Me.BtnMailsend.UseVisualStyleBackColor = True
-        '
-        'chkres
-        '
-        Me.chkres.AutoSize = True
-        Me.chkres.Location = New System.Drawing.Point(338, 63)
-        Me.chkres.Name = "chkres"
-        Me.chkres.Size = New System.Drawing.Size(76, 18)
-        Me.chkres.TabIndex = 68
-        Me.chkres.Text = "Resigned"
-        Me.chkres.UseVisualStyleBackColor = True
-        '
-        'chkWorking
-        '
-        Me.chkWorking.AutoSize = True
-        Me.chkWorking.Checked = True
-        Me.chkWorking.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkWorking.Location = New System.Drawing.Point(260, 62)
-        Me.chkWorking.Name = "chkWorking"
-        Me.chkWorking.Size = New System.Drawing.Size(74, 18)
-        Me.chkWorking.TabIndex = 67
-        Me.chkWorking.Text = "Working"
-        Me.chkWorking.UseVisualStyleBackColor = True
         '
         'toolStripLabel2
         '
@@ -400,7 +337,7 @@ Partial Class frmPayslipMailSend
         Me.bindingNavigator1.DeleteItem = Me.bindingNavigatorDeleteItem
         Me.bindingNavigator1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.bindingNavigator1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.bindingNavigatorMoveFirstItem, Me.bindingNavigatorMovePreviousItem, Me.bindingNavigatorSeparator, Me.bindingNavigatorPositionItem, Me.bindingNavigatorCountItem, Me.bindingNavigatorSeparator1, Me.bindingNavigatorMoveNextItem, Me.bindingNavigatorMoveLastItem, Me.bindingNavigatorSeparator2, Me.bindingNavigatorAddNewItem, Me.bindingNavigatorEditItem, Me.bindingNavigatorDeleteItem, Me.toolStripSeparator1, Me.toolStripLabel2, Me.toolStripComboBox_RecordPerPage})
-        Me.bindingNavigator1.Location = New System.Drawing.Point(0, 491)
+        Me.bindingNavigator1.Location = New System.Drawing.Point(0, 509)
         Me.bindingNavigator1.MoveFirstItem = Me.bindingNavigatorMoveFirstItem
         Me.bindingNavigator1.MoveLastItem = Me.bindingNavigatorMoveLastItem
         Me.bindingNavigator1.MoveNextItem = Me.bindingNavigatorMoveNextItem
@@ -410,42 +347,6 @@ Partial Class frmPayslipMailSend
         Me.bindingNavigator1.Size = New System.Drawing.Size(1044, 25)
         Me.bindingNavigator1.TabIndex = 18
         Me.bindingNavigator1.Text = "bindingNavigator1"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.BackColor = System.Drawing.Color.Aqua
-        Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.PictureBox1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.PictureBox1.Location = New System.Drawing.Point(0, 0)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(1044, 69)
-        Me.PictureBox1.TabIndex = 20
-        Me.PictureBox1.TabStop = False
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.Black
-        Me.Label2.Font = New System.Drawing.Font("Times New Roman", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.White
-        Me.Label2.Location = New System.Drawing.Point(429, 31)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(211, 26)
-        Me.Label2.TabIndex = 24
-        Me.Label2.Text = "Employee  Register"
-        '
-        'Chkselectall
-        '
-        Me.Chkselectall.AutoSize = True
-        Me.Chkselectall.Checked = True
-        Me.Chkselectall.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.Chkselectall.Font = New System.Drawing.Font("Bookman Old Style", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Chkselectall.Location = New System.Drawing.Point(12, 171)
-        Me.Chkselectall.Name = "Chkselectall"
-        Me.Chkselectall.Size = New System.Drawing.Size(163, 18)
-        Me.Chkselectall.TabIndex = 25
-        Me.Chkselectall.Text = "Select All Employees"
-        Me.Chkselectall.UseVisualStyleBackColor = True
         '
         'dgvReport
         '
@@ -462,13 +363,31 @@ Partial Class frmPayslipMailSend
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvReport.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvReport.ColumnHeadersHeight = 25
-        Me.dgvReport.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.EmployeeId, Me.EmploeeCode, Me.EmployeeName, Me.FingerId, Me.CatName, Me.Department, Me.ShiftGroup, Me.Column5, Me.Column20, Me.ConsWages, Me.Basic, Me.wpday, Me.Column24, Me.PFDate, Me.Column26, Me.UanNo, Me.ESINo, Me.ESIDate, Me.ESILocation, Me.ContactNo, Me.AudharID, Me.PanNo, Me.VoteId, Me.RCNo})
-        Me.dgvReport.Location = New System.Drawing.Point(0, 203)
+        Me.dgvReport.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.EmployeeId, Me.EmploeeCode, Me.EmployeeName, Me.FingerId, Me.CatName, Me.Department, Me.UanNo, Me.ESINo, Me.OldBalance, Me.Advance, Me.AdvanceLess, Me.Present, Me.GrossAmount, Me.PF, Me.ESI, Me.LOPAmount, Me.NetSalary, Me.AdvanceBalance, Me.MailID, Me.Status})
+        Me.dgvReport.Location = New System.Drawing.Point(0, 240)
         Me.dgvReport.Name = "dgvReport"
         Me.dgvReport.RowHeadersVisible = False
         Me.dgvReport.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
-        Me.dgvReport.Size = New System.Drawing.Size(1042, 286)
+        Me.dgvReport.Size = New System.Drawing.Size(1042, 269)
         Me.dgvReport.TabIndex = 19
+        '
+        'lstopt
+        '
+        Me.lstopt.FormattingEnabled = True
+        Me.lstopt.Location = New System.Drawing.Point(112, 20)
+        Me.lstopt.Name = "lstopt"
+        Me.lstopt.Size = New System.Drawing.Size(272, 109)
+        Me.lstopt.TabIndex = 79
+        '
+        'btmailsend
+        '
+        Me.btmailsend.BackColor = System.Drawing.Color.Chocolate
+        Me.btmailsend.Location = New System.Drawing.Point(843, 55)
+        Me.btmailsend.Name = "btmailsend"
+        Me.btmailsend.Size = New System.Drawing.Size(80, 29)
+        Me.btmailsend.TabIndex = 80
+        Me.btmailsend.Text = "Mail"
+        Me.btmailsend.UseVisualStyleBackColor = False
         '
         'Column1
         '
@@ -517,69 +436,6 @@ Partial Class frmPayslipMailSend
         Me.Department.Name = "Department"
         Me.Department.Width = 80
         '
-        'ShiftGroup
-        '
-        Me.ShiftGroup.DataPropertyName = "ShiftGroup"
-        Me.ShiftGroup.HeaderText = "ShiftGroup"
-        Me.ShiftGroup.Name = "ShiftGroup"
-        Me.ShiftGroup.Width = 80
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Sgroup"
-        Me.Column5.HeaderText = "SGroup"
-        Me.Column5.Name = "Column5"
-        Me.Column5.Width = 80
-        '
-        'Column20
-        '
-        Me.Column20.DataPropertyName = "IDMark"
-        Me.Column20.HeaderText = "IDMark"
-        Me.Column20.Name = "Column20"
-        Me.Column20.Width = 80
-        '
-        'ConsWages
-        '
-        Me.ConsWages.DataPropertyName = "ConsWages"
-        Me.ConsWages.HeaderText = "ConsWages"
-        Me.ConsWages.Name = "ConsWages"
-        Me.ConsWages.Width = 80
-        '
-        'Basic
-        '
-        Me.Basic.DataPropertyName = "Basic"
-        Me.Basic.HeaderText = "Basic"
-        Me.Basic.Name = "Basic"
-        Me.Basic.Width = 80
-        '
-        'wpday
-        '
-        Me.wpday.DataPropertyName = "wpday"
-        Me.wpday.HeaderText = "Perday"
-        Me.wpday.Name = "wpday"
-        Me.wpday.Width = 80
-        '
-        'Column24
-        '
-        Me.Column24.DataPropertyName = "PFNo"
-        Me.Column24.HeaderText = "PFNo"
-        Me.Column24.Name = "Column24"
-        Me.Column24.Width = 80
-        '
-        'PFDate
-        '
-        Me.PFDate.DataPropertyName = "PFDate"
-        Me.PFDate.HeaderText = "PFDate"
-        Me.PFDate.Name = "PFDate"
-        Me.PFDate.Width = 80
-        '
-        'Column26
-        '
-        Me.Column26.DataPropertyName = "PFNominee"
-        Me.Column26.HeaderText = "PFNominee"
-        Me.Column26.Name = "Column26"
-        Me.Column26.Width = 80
-        '
         'UanNo
         '
         Me.UanNo.DataPropertyName = "UanNo"
@@ -593,71 +449,120 @@ Partial Class frmPayslipMailSend
         Me.ESINo.Name = "ESINo"
         Me.ESINo.Width = 80
         '
-        'ESIDate
+        'OldBalance
         '
-        Me.ESIDate.DataPropertyName = "ESIDate"
-        Me.ESIDate.HeaderText = "ESIDate"
-        Me.ESIDate.Name = "ESIDate"
-        Me.ESIDate.Width = 80
+        Me.OldBalance.DataPropertyName = "OldBalance"
+        Me.OldBalance.HeaderText = "OldBalance "
+        Me.OldBalance.Name = "OldBalance"
+        Me.OldBalance.Width = 80
         '
-        'ESILocation
+        'Advance
         '
-        Me.ESILocation.DataPropertyName = "ESILocation"
-        Me.ESILocation.HeaderText = "ESILocation"
-        Me.ESILocation.Name = "ESILocation"
-        Me.ESILocation.Width = 80
+        Me.Advance.DataPropertyName = "Advance"
+        Me.Advance.HeaderText = "Advance"
+        Me.Advance.Name = "Advance"
+        Me.Advance.Width = 80
         '
-        'ContactNo
+        'AdvanceLess
         '
-        Me.ContactNo.DataPropertyName = "ContactNo"
-        Me.ContactNo.HeaderText = "ContactNo"
-        Me.ContactNo.Name = "ContactNo"
-        Me.ContactNo.Width = 80
+        Me.AdvanceLess.DataPropertyName = "AdvanceLess"
+        Me.AdvanceLess.HeaderText = "AdvanceLess"
+        Me.AdvanceLess.Name = "AdvanceLess"
+        Me.AdvanceLess.Width = 80
         '
-        'AudharID
+        'Present
         '
-        Me.AudharID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.AudharID.DataPropertyName = "AudharID"
-        Me.AudharID.HeaderText = "AudharID"
-        Me.AudharID.MinimumWidth = 80
-        Me.AudharID.Name = "AudharID"
+        Me.Present.DataPropertyName = "Present"
+        Me.Present.HeaderText = "Present"
+        Me.Present.Name = "Present"
+        Me.Present.Width = 80
         '
-        'PanNo
+        'GrossAmount
         '
-        Me.PanNo.DataPropertyName = "PanNo"
-        Me.PanNo.HeaderText = "PanNo"
-        Me.PanNo.Name = "PanNo"
+        Me.GrossAmount.DataPropertyName = "GrossAmount"
+        Me.GrossAmount.HeaderText = "GrossAmount"
+        Me.GrossAmount.Name = "GrossAmount"
+        Me.GrossAmount.Width = 80
         '
-        'VoteId
+        'PF
         '
-        Me.VoteId.DataPropertyName = "VoteId"
-        Me.VoteId.HeaderText = "VoteId"
-        Me.VoteId.Name = "VoteId"
+        Me.PF.DataPropertyName = "PF"
+        Me.PF.HeaderText = "PF"
+        Me.PF.Name = "PF"
+        Me.PF.Width = 80
         '
-        'RCNo
+        'ESI
         '
-        Me.RCNo.DataPropertyName = "RCNo"
-        Me.RCNo.HeaderText = "RCNo"
-        Me.RCNo.Name = "RCNo"
+        Me.ESI.DataPropertyName = "ESI"
+        Me.ESI.HeaderText = "ESI"
+        Me.ESI.Name = "ESI"
+        Me.ESI.Width = 80
         '
-        'Button1
+        'LOPAmount
         '
-        Me.Button1.BackColor = System.Drawing.Color.Chocolate
-        Me.Button1.Location = New System.Drawing.Point(860, 20)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(56, 24)
-        Me.Button1.TabIndex = 72
-        Me.Button1.Text = "Send"
-        Me.Button1.UseVisualStyleBackColor = False
+        Me.LOPAmount.DataPropertyName = "LOPAmount"
+        Me.LOPAmount.HeaderText = "LOPAmount"
+        Me.LOPAmount.Name = "LOPAmount"
+        Me.LOPAmount.Width = 80
+        '
+        'NetSalary
+        '
+        Me.NetSalary.DataPropertyName = "NetSalary"
+        Me.NetSalary.HeaderText = "NetSalary"
+        Me.NetSalary.Name = "NetSalary"
+        Me.NetSalary.Width = 80
+        '
+        'AdvanceBalance
+        '
+        Me.AdvanceBalance.DataPropertyName = "AdvanceBalance"
+        Me.AdvanceBalance.HeaderText = "AdvanceBalance"
+        Me.AdvanceBalance.Name = "AdvanceBalance"
+        Me.AdvanceBalance.Width = 80
+        '
+        'MailID
+        '
+        Me.MailID.DataPropertyName = "MailID"
+        Me.MailID.HeaderText = "MailID"
+        Me.MailID.Name = "MailID"
+        Me.MailID.Width = 80
+        '
+        'Status
+        '
+        Me.Status.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.Status.DataPropertyName = "Status"
+        Me.Status.HeaderText = "Status"
+        Me.Status.MinimumWidth = 80
+        Me.Status.Name = "Status"
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.SystemColors.GradientActiveCaption
+        Me.Panel1.Controls.Add(Me.lblCaption)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1044, 67)
+        Me.Panel1.TabIndex = 523
+        '
+        'lblCaption
+        '
+        Me.lblCaption.BackColor = System.Drawing.SystemColors.HotTrack
+        Me.lblCaption.Dock = System.Windows.Forms.DockStyle.Top
+        Me.lblCaption.Font = New System.Drawing.Font("Tahoma", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCaption.ForeColor = System.Drawing.Color.WhiteSmoke
+        Me.lblCaption.Location = New System.Drawing.Point(0, 0)
+        Me.lblCaption.Name = "lblCaption"
+        Me.lblCaption.Size = New System.Drawing.Size(1044, 32)
+        Me.lblCaption.TabIndex = 10
+        Me.lblCaption.Text = "Send Payslip Mail Send"
+        Me.lblCaption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'frmPayslipMailSend
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(1044, 516)
-        Me.Controls.Add(Me.Chkselectall)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.PictureBox1)
+        Me.ClientSize = New System.Drawing.Size(1044, 534)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.dgvReport)
         Me.Controls.Add(Me.panel2)
         Me.Controls.Add(Me.bindingNavigator1)
@@ -672,23 +577,17 @@ Partial Class frmPayslipMailSend
         CType(Me.bindingNavigator1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.bindingNavigator1.ResumeLayout(False)
         Me.bindingNavigator1.PerformLayout()
-        CType(Me.bindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.bindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
     Private WithEvents bindingSource1 As System.Windows.Forms.BindingSource
     Private WithEvents toolStripComboBox_RecordPerPage As System.Windows.Forms.ToolStripComboBox
-    Private WithEvents txt_EmpCode As System.Windows.Forms.TextBox
-    Private WithEvents lbl_EmployeeCode As System.Windows.Forms.Label
-    Private WithEvents CbxDepartment As System.Windows.Forms.ComboBox
-    Private WithEvents lbl_Department As System.Windows.Forms.Label
     Private WithEvents CbxOrderby As System.Windows.Forms.ComboBox
     Private WithEvents label6 As System.Windows.Forms.Label
-    Private WithEvents CbxCategory As System.Windows.Forms.ComboBox
-    Private WithEvents lbl_Category As System.Windows.Forms.Label
     Private WithEvents CbxDesignation As System.Windows.Forms.ComboBox
     Private WithEvents lbl_Company As System.Windows.Forms.Label
     Private WithEvents btn_Export As System.Windows.Forms.Button
@@ -709,39 +608,35 @@ Partial Class frmPayslipMailSend
     Private WithEvents bindingNavigatorCountItem As System.Windows.Forms.ToolStripLabel
     Private WithEvents bindingNavigatorAddNewItem As System.Windows.Forms.ToolStripButton
     Private WithEvents bindingNavigator1 As System.Windows.Forms.BindingNavigator
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents chkres As System.Windows.Forms.CheckBox
-    Friend WithEvents chkWorking As System.Windows.Forms.CheckBox
     Friend WithEvents Chkselectall As System.Windows.Forms.CheckBox
-    Private WithEvents BtnMailsend As System.Windows.Forms.Button
     Private WithEvents dgvReport As System.Windows.Forms.DataGridView
-    Friend WithEvents Column1 As System.Windows.Forms.DataGridViewCheckBoxColumn
-    Friend WithEvents EmployeeId As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents EmploeeCode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents EmployeeName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents FingerId As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents CatName As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Department As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ShiftGroup As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column5 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column20 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ConsWages As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Basic As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents wpday As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column24 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PFDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Column26 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents UanNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ESINo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ESIDate As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ESILocation As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents ContactNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents AudharID As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents PanNo As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents VoteId As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents RCNo As System.Windows.Forms.DataGridViewTextBoxColumn
     Private WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Dtpfromdate As System.Windows.Forms.DateTimePicker
-    Private WithEvents Button1 As Button
+    Private WithEvents Label4 As Label
+    Friend WithEvents chkall As CheckBox
+    Friend WithEvents lstopt As CheckedListBox
+    Private WithEvents btmailsend As Button
+    Friend WithEvents Column1 As DataGridViewCheckBoxColumn
+    Friend WithEvents EmployeeId As DataGridViewTextBoxColumn
+    Friend WithEvents EmploeeCode As DataGridViewTextBoxColumn
+    Friend WithEvents EmployeeName As DataGridViewTextBoxColumn
+    Friend WithEvents FingerId As DataGridViewTextBoxColumn
+    Friend WithEvents CatName As DataGridViewTextBoxColumn
+    Friend WithEvents Department As DataGridViewTextBoxColumn
+    Friend WithEvents UanNo As DataGridViewTextBoxColumn
+    Friend WithEvents ESINo As DataGridViewTextBoxColumn
+    Friend WithEvents OldBalance As DataGridViewTextBoxColumn
+    Friend WithEvents Advance As DataGridViewTextBoxColumn
+    Friend WithEvents AdvanceLess As DataGridViewTextBoxColumn
+    Friend WithEvents Present As DataGridViewTextBoxColumn
+    Friend WithEvents GrossAmount As DataGridViewTextBoxColumn
+    Friend WithEvents PF As DataGridViewTextBoxColumn
+    Friend WithEvents ESI As DataGridViewTextBoxColumn
+    Friend WithEvents LOPAmount As DataGridViewTextBoxColumn
+    Friend WithEvents NetSalary As DataGridViewTextBoxColumn
+    Friend WithEvents AdvanceBalance As DataGridViewTextBoxColumn
+    Friend WithEvents MailID As DataGridViewTextBoxColumn
+    Friend WithEvents Status As DataGridViewTextBoxColumn
+    Friend WithEvents Panel1 As Panel
+    Friend WithEvents lblCaption As Label
 End Class

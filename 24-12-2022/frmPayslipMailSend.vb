@@ -7,20 +7,14 @@ Imports System.Data.OleDb
 Imports CrystalDecisions.CrystalReports.Engine
 Imports System.Math
 Imports Microsoft.Office.Interop
-Imports System.IO
-Imports System.Web.UI.WebControls
-Imports System.Linq
-Imports System.ComponentModel
-
 Imports System.Net.Mail
-Imports System.Collections.Generic
-Imports System.Configuration
+Imports System.IO
+
 #End Region
 
 Public Class frmPayslipMailSend
     'Dim oReport As New clsReport
-    ''  Dim mobjAttendance As New ClsAttendance
-    Dim mobjclsEmployee_Report As New clsEmployee_Report
+    Dim mobjclssalaryreport As New clsSalary_report
     Dim CommonFunction As New DateFormat
 
     Private objAttendanceLogsDataTable As DataTable
@@ -29,28 +23,48 @@ Public Class frmPayslipMailSend
     Private isDirtyLoad As Boolean = True
     Private i As Integer = 0
 
-    Private Property CbxSex As Object
-
     Private Sub frmPayslipMailSend_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
 
             Fill_Combo_Details()
-
+            Fill_Listbox_details(" select distinct DeptName FROM [Deptmaster]  Where  Location_Code='" & mvarLocationCode & "' and is_active='1'    ", mvarDbasename, lstopt)
             mvarReportName = Me.Text
-
+            Dim saldate As Date = LastDayOfMonth(DateTime.Now.AddMonths(-1))
+            Dtpfromdate.Value = saldate
             Me.dgvReport.AutoGenerateColumns = False
             Me.toolStripComboBox_RecordPerPage.SelectedItem = "All"
             'CommonFunction.LoadMonth(Me.drp_Month)
             'CommonFunction.LoadYear(Me.drp_Year)
             'Me.drp_Month.Text = DateTime.Now.ToString("MMM")
             Me.isDirtyLoad = False
-            CbxCategory.Text = "ALL"
-            CbxDepartment.Text = "ALL"
+
             CbxDesignation.Text = "ALL"
 
         Catch ex As Exception
             Show_Message(ex.Message)
         End Try
+    End Sub
+    Sub Fill_Listbox_details(ByVal mSSQL As String, ByVal mdatabase As String, ByVal mCBX As ListBox)
+        Try
+
+            '     mCBX.Items.Add("ALL")
+
+            ds = Nothing
+            ds = New DataSet
+            ds = ReturnMultipleValue(mSSQL, mdatabase)
+            If ds.Tables(0).Rows.Count <= 0 Then Exit Sub
+            For iRow As Integer = 0 To ds.Tables(0).Rows.Count - 1
+                mCBX.Items.Add(Trim(ds.Tables(0).Rows(iRow)(0)))
+            Next
+            ds.Dispose()
+        Catch ex As Exception
+            Show_Message(ex.Message)
+        Finally
+            If Not ds Is Nothing Then
+                ds.Dispose()
+            End If
+        End Try
+        mCBX.SelectedIndex = 0
     End Sub
     Public Sub InitializeForm(ByVal mvarScreenName As String)
         Try
@@ -64,8 +78,6 @@ Public Class frmPayslipMailSend
     Private Sub Fill_Combo_Details()
         Try
 
-            Fill_CBX_details(" select distinct catname from Category_Master  Where  Location_Code='" & mvarLocationCode & "' and is_active='1'  order by  catname   ", mvarDbasename, CbxCategory)
-            Fill_CBX_details("select distinct DeptName FROM [Deptmaster]  Where  Location_Code='" & mvarLocationCode & "' and is_active='1'  order by  DeptName  ", mvarDbasename, CbxDepartment)
             Fill_CBX_details("select distinct DesgnName FROM [Designation] Where  Location_Code='" & mvarLocationCode & "' and is_active='1'  order by  DesgnName  ", mvarDbasename, CbxDesignation)
 
         Catch ex As Exception
@@ -131,50 +143,165 @@ Public Class frmPayslipMailSend
             ''  e.Handled = blnLimitToList
         End If
     End Sub
-    Private Sub CbxCategory_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles CbxCategory.KeyPress
-        AutoComplete(Me.CbxCategory, e)
-    End Sub
-    Private Sub CbxDepartment_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles CbxDepartment.KeyPress
-        AutoComplete(Me.CbxCategory, e)
-    End Sub
-    Private Sub CbxDesignation_KeyPress(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles CbxDesignation.KeyPress
-        AutoComplete(Me.CbxCategory, e)
-    End Sub
-
     Private Sub btn_Go_Click(sender As Object, e As EventArgs) Handles btn_Go.Click
         Try
-            Dim mselectedvalues = CbxCategory.Text
 
-            Dim memployeetype As String = ""
-            Dim mempstatus As String = ""
+            If mvarReportName = "" Then Exit Sub
+            Dim crysrep As New ReportDocument
+            Dim crysview As New frmRepView
 
-            If chkWorking.Checked = True And chkres.Checked = True Then
-                mempstatus = "ALL"
-            ElseIf chkWorking.Checked = True And chkres.Checked = False Then
+            Dim mselectedvalues = ""
+            For i = 0 To lstopt.Items.Count - 1
+                If lstopt.GetItemChecked(i) = True Then
+                    mselectedvalues = mselectedvalues & "||" & lstopt.Items(i)
+                End If
+            Next
 
-                mempstatus = "WORKING"
+            Dim mCatlist = "'"
+            For i = 0 To lstopt.Items.Count - 1
+                If lstopt.GetItemChecked(i) = True Then
+                    mCatlist = mCatlist & "','" & lstopt.Items(i)
+                End If
+            Next
+            mCatlist = mCatlist & "'"
+            Dim tdate As DateTime
+            tdate = DateAdd(DateInterval.Day, (Dtpfromdate.Value.Day - 1) * -1, Dtpfromdate.Value)
+            tdate = DateAdd(DateInterval.Day, -1, DateAdd(DateInterval.Month, 1, tdate))
+            Dim msaldate As String = ""
+            msaldate = Format(tdate, "yyyy-MM-dd")
 
-            ElseIf chkWorking.Checked = False And chkres.Checked = True Then
-                mempstatus = "NOT-WORKING"
+            Dim sex = ""
+            If CbxDesignation.Text = "Male" Then
 
-            Else
-                mempstatus = "ALL"
+                sex = "Male"
+            ElseIf CbxDesignation.Text = "Female" Then
+                sex = "Female"
+            ElseIf CbxDesignation.Text = "ALL" Then
+                sex = "All"
+
             End If
 
-            Employee_Report(CbxCategory.Text, CbxDepartment.Text, CbxDesignation.Text, "ALL", txt_EmpCode.Text, mempstatus)
+            Dim mstartdate As String = ""
+            Dim menddate As String = ""
+
+            Dim mFinStartDate As String = ""
+            Dim mFromDate As String = ""
+            Dim mToDate As String = ""
+            mFromDate = Format(Dtpfromdate.Value, "yyyy/MM/dd")
+            mToDate = Format(Dtpfromdate.Value, "yyyy/MM/dd")
+
+            HRD_EmpPayslip_Report(mCatlist, mFromDate, mToDate, sex, "")
+
         Catch ex As Exception
             Show_Message(ex.Message)
 
         End Try
     End Sub
+    Private Sub HRD_EmpPayslip_Report(ByVal mselectedvalues As String, ByVal msaldate As String, ByVal mvarEnddate As String, ByVal sex As String, ByVal ATM As String)
+        Try
 
+            Dim mVARselectedvalues = ""
+            Dim mfilterdata As String = ""
+            Dim i
+            Dim staff As Boolean = False
+            For i = 0 To lstopt.Items.Count - 1
+                If lstopt.GetItemChecked(i) = True Then
+                    mVARselectedvalues = mVARselectedvalues & "||" & lstopt.Items(i)
+
+                    mfilterdata = "order by empCODEID "
+
+                End If
+            Next
+1:          Dim tdate As DateTime
+            tdate = DateAdd(DateInterval.Day, (Dtpfromdate.Value.Day - 1) * -1, Dtpfromdate.Value)
+            tdate = DateAdd(DateInterval.Day, -1, DateAdd(DateInterval.Month, 1, tdate))
+            Dim dt As New DataTable
+            Dim ds As New DataSet
+            Dim Dtable As New DataTable
+
+            i = 0
+            Dim checkitemcnt = 0
+            Dtable.Columns.Add("SNO", Type.GetType("System.String"))
+            Dtable.Columns.Add("EMPCODE", Type.GetType("System.String"))
+            Dtable.Columns.Add("Name", Type.GetType("System.String"))
+            Dtable.Columns.Add("FingerId", Type.GetType("System.String"))
+            Dtable.Columns.Add("Sdate", Type.GetType("System.String"))
+            Dtable.Columns.Add("catname", Type.GetType("System.String"))
+            Dtable.Columns.Add("Deptname", Type.GetType("System.String"))
+            Dtable.Columns.Add("DesgnName", Type.GetType("System.String"))
+            Dtable.Columns.Add("UANNO", Type.GetType("System.String"))
+            Dtable.Columns.Add("ESINO", Type.GetType("System.String"))
+            Dtable.Columns.Add("OldBalance", Type.GetType("System.String"))
+            Dtable.Columns.Add("Advance", Type.GetType("System.String"))
+            Dtable.Columns.Add("AdvanceLess", Type.GetType("System.String"))
+            Dtable.Columns.Add("Present", Type.GetType("System.String"))
+            Dtable.Columns.Add("GrossAmount", Type.GetType("System.String"))
+            Dtable.Columns.Add("PF", Type.GetType("System.String"))
+            Dtable.Columns.Add("ESI", Type.GetType("System.String"))
+            Dtable.Columns.Add("LOPAmount", Type.GetType("System.String"))
+            Dtable.Columns.Add("NetSalary", Type.GetType("System.String"))
+            Dtable.Columns.Add("AdvanceBalance", Type.GetType("System.String"))
+            Dtable.Columns.Add("MailID", Type.GetType("System.String"))
+            Dtable.Columns.Add("Status", Type.GetType("System.String"))
+
+            Dim irows As Integer = 0
+
+            ds = mobjclssalaryreport.GetEmpSalaryDetails_Report(mselectedvalues, sex, ATM, mvarEnddate, mvarEnddate, mfilterdata, "GetEmp_SalaryAbstract_Details")
+
+            If ds.Tables(0).Rows.Count <= 0 Then Exit Sub
+            For i = 0 To ds.Tables(0).Rows.Count - 1
+                Dtable.Rows.Add()
+                Dtable.Rows(irows)("SNO") = irows + 1
+                Dtable.Rows(irows)("EmpCode") = ds.Tables(0).Rows(i).Item("EmpCode")
+                Dtable.Rows(irows)("Name") = ds.Tables(0).Rows(i).Item("EmpName")
+                Dtable.Rows(irows)("FingerId") = ds.Tables(0).Rows(i).Item("FingerId")
+                Dtable.Rows(irows)("sdate") = ds.Tables(0).Rows(i).Item("sdate")
+                Dtable.Rows(irows)("catname") = ds.Tables(0).Rows(i).Item("catname")
+                Dtable.Rows(irows)("Deptname") = ds.Tables(0).Rows(i).Item("Deptname")
+                Dtable.Rows(irows)("DesgnName") = ds.Tables(0).Rows(i).Item("DesgnName")
+                Dtable.Rows(irows)("UANNO") = ds.Tables(0).Rows(i).Item("UanNo")
+                Dtable.Rows(irows)("ESINO") = ds.Tables(0).Rows(i).Item("ESINo")
+                Dtable.Rows(irows)("OldBalance") = ds.Tables(0).Rows(i).Item("Adv_Opening")
+                Dtable.Rows(irows)("Advance") = ds.Tables(0).Rows(i).Item("Current_Advance")
+                Dtable.Rows(irows)("AdvanceLess") = ds.Tables(0).Rows(i).Item("Current_paid")
+                Dtable.Rows(irows)("Present") = ds.Tables(0).Rows(i).Item("Present")
+                Dtable.Rows(irows)("GrossAmount") = ds.Tables(0).Rows(i).Item("GrossAmount")
+                Dtable.Rows(irows)("PF") = ds.Tables(0).Rows(i).Item("PFAmount")
+                Dtable.Rows(irows)("ESI") = ds.Tables(0).Rows(i).Item("EmpESIAmount")
+                Dtable.Rows(irows)("LOPAmount") = ds.Tables(0).Rows(i).Item("LOPAmount")
+                Dtable.Rows(irows)("NetSalary") = ds.Tables(0).Rows(i).Item("NetAmount")
+                Dtable.Rows(irows)("AdvanceBalance") = ds.Tables(0).Rows(i).Item("Adv_Balance")
+
+                Dtable.Rows(irows)("MailID") = ds.Tables(0).Rows(i).Item("MailID")
+                Dtable.Rows(irows)("Status") = ""
+
+                irows = irows + 1
+
+            Next
+
+            Dim str7 As String = Me.toolStripComboBox_RecordPerPage.SelectedItem.ToString
+            If (str7 = "All") Then
+                Me.bindingSource1.DataSource = Dtable
+            Else
+
+                Dim query = Dtable.AsEnumerable().Skip(0).Take(str7)
+                Me.bindingSource1.DataSource = query.CopyToDataTable()
+                ''Return query.CopyToDataTable()
+
+                '       Me.bindingSource1.DataSource = Dtable.Take(Of WorkDurationRow)(Convert.ToInt32(str7))
+            End If
+            Me.dgvReport.DataSource = Me.bindingSource1
+            Me.bindingNavigator1.BindingSource = Me.bindingSource1
+            '
+        Catch ex As Exception
+            Show_Message(ex.Message.ToString())
+        End Try
+    End Sub
     Private Sub Employee_Report(ByVal catname As String, ByVal Deptname As String, ByVal Desgnname As String, ByVal sex As String, ByVal empcode As String, ByVal mempstatus As String)
 
         Dim i
         Dim checkitemcnt = 0
-
         Dim staff As Boolean = False
-
         Dim Dtable As New DataTable
         Dim dt As New DataTable
 
@@ -228,7 +355,7 @@ Public Class frmPayslipMailSend
         Dtable.Columns.Add("BankName", Type.GetType("System.String"))
         Dtable.Columns.Add("Branch_Location", Type.GetType("System.String"))
 
-        ''    
+        ''
 
         Dim irows As Integer = 0
 
@@ -242,7 +369,7 @@ Public Class frmPayslipMailSend
 
         Dim strDate As DateTime
 
-        ds = mobjclsEmployee_Report.GetEmployeeRegister_Details(catname, Deptname, Desgnname, sex, empcode, mempstatus, "Emp_Abstract")
+        '   ds = mobjclsEmployee_Report.GetEmployeeRegister_Details(catname, Deptname, Desgnname, sex, empcode, mempstatus, "Emp_Abstract")
         If ds.Tables(0).Rows.Count <= 0 Then Exit Sub
         For i = 0 To ds.Tables(0).Rows.Count - 1
 
@@ -315,30 +442,41 @@ Public Class frmPayslipMailSend
 
     Private Sub PopulateDataGrid()
         If Not Me.isDirtyLoad Then
-            Dim mselectedvalues = CbxCategory.Text
+            Dim mselectedvalues = ""
+            For i = 0 To lstopt.Items.Count - 1
+                If lstopt.GetItemChecked(i) = True Then
+                    mselectedvalues = mselectedvalues & "||" & lstopt.Items(i)
+                End If
+            Next
 
-            Dim sex = CbxSex.Text
+            Dim mCatlist = "'"
+            For i = 0 To lstopt.Items.Count - 1
+                If lstopt.GetItemChecked(i) = True Then
+                    mCatlist = mCatlist & "','" & lstopt.Items(i)
+                End If
+            Next
+            mCatlist = mCatlist & "'"
+
+            Dim sex = CbxDesignation.Text
 
             Dim memployeetype As String = ""
             Dim mempstatus As String = ""
 
-            If chkWorking.Checked = True And chkres.Checked = True Then
-                mempstatus = "ALL"
-            ElseIf chkWorking.Checked = True And chkres.Checked = False Then
-
-                mempstatus = "WORKING"
-
-            ElseIf chkWorking.Checked = False And chkres.Checked = True Then
-                mempstatus = "NOT-WORKING"
-
-            Else
-                mempstatus = "ALL"
-            End If
             Dim str As String = Me.toolStripComboBox_RecordPerPage.SelectedItem.ToString
             If (str = "All") Then
                 str = "0"
             End If
-            Employee_Report(CbxCategory.Text, CbxDepartment.Text, CbxDesignation.Text, sex, txt_EmpCode.Text, mempstatus)
+
+            Dim mstartdate As String = ""
+            Dim menddate As String = ""
+
+            Dim mFinStartDate As String = ""
+            Dim mFromDate As String = ""
+            Dim mToDate As String = ""
+            mFromDate = Format(Dtpfromdate.Value, "yyyy/MM/dd")
+            mToDate = Format(Dtpfromdate.Value, "yyyy/MM/dd")
+
+            HRD_EmpPayslip_Report(mCatlist, mFromDate, mToDate, sex, "")
 
         End If
     End Sub
@@ -347,13 +485,13 @@ Public Class frmPayslipMailSend
         Me.PopulateDataGrid()
     End Sub
     'Public Shared Function GetDataTable(ByVal PageSize As Integer, ByVal CurrentPagea As Integer) As DataTable
-    'Dim dtData As New DataTable = da_Book_Content.GetDataContent()    
+    'Dim dtData As New DataTable = da_Book_Content.GetDataContent()
     '    Dim query = dtData.AsEnumerable().Skip(CurrentPage).Take(PageSize)
     '    Return query.CopyToDataTable()
     'End Function
 
     'Public Shared Function GetDataTable(ByVal PageSize As Integer, ByVal CurrentPagea As Integer) As DataTable
-    'Dim dtData As New DataTable = da_Book_Content.GetDataContent()    
+    'Dim dtData As New DataTable = da_Book_Content.GetDataContent()
     '    Dim query = dtData.AsEnumerable().Skip(CurrentPagea).Take(PageSize)
     '    Return query.CopyToDataTable()
     'End Function
@@ -444,70 +582,6 @@ Public Class frmPayslipMailSend
         End Try
     End Sub
 
-    Private Sub drp_Month_SelectedIndexChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub label10_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub dgvReport_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvReport.CellContentClick
-
-    End Sub
-
-    Private Sub dgvReport_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvReport.CellDoubleClick
-        Dim id
-        Dim Hodcode
-        Try
-
-            Dim scol As System.Windows.Forms.DataGridViewColumn = Me.dgvReport.SortedColumn
-            Dim sorder As ListSortDirection = Me.dgvReport.SortOrder
-
-            id = Me.dgvReport.Item(1, Me.dgvReport.CurrentCell.RowIndex).Value
-            Dim lastid = Me.dgvReport.CurrentCell.RowIndex
-            'Dim nRowIndex As Integer = DgvMonthAttendance.Rows.Count - 1
-            Dim nRowIndex As Integer = Me.dgvReport.CurrentCell.RowIndex
-            '' Hodcode = Me.DgvMonthAttendance.Item(15, Me.DgvMonthAttendance.CurrentCell.RowIndex).Value
-            'Hodcode = Me.DgvMonthAttendance.Item(13, Me.DgvMonthAttendance.CurrentCell.RowIndex).Value
-            'Hodcode = Me.DgvMonthAttendance.Item(16, Me.DgvMonthAttendance.CurrentCell.RowIndex).Value
-            ''If Hodcode = 0 Then
-            dgvReport.Rows(nRowIndex).DefaultCellStyle.BackColor = Color.Brown
-            Dim mobjempmaster As New frmEmployeeMaster(id, 2)
-            mobjempmaster.StartPosition = FormStartPosition.CenterScreen
-            '' LoadForm(mobjempmaster)
-            '' mobjempmaster.ShowDialog()
-            mobjempmaster.MdiParent = mdiMain
-            mobjempmaster.BringToFront()
-            mobjempmaster.Show()
-
-            btn_Go.PerformClick()
-
-            dgvReport.Rows(nRowIndex).Selected = True
-            'DgvMonthAttendance.Rows(nRowIndex).Cells(0).Selected = True
-
-            dgvReport.CurrentCell = dgvReport.Rows(nRowIndex).Cells(0)
-            'Else
-            'MessageBox.Show("Contact Admin")
-            'Exit Sub
-            'End If
-
-        Catch ex As Exception
-
-        End Try
-    End Sub
-    Private Sub LoadForm(ByVal frmName As Form)
-        For Each currentForm As Form In Me.MdiChildren
-            If frmName.GetType Is currentForm.GetType Then
-                currentForm.Activate()
-                Return
-            End If
-        Next
-        frmName.MdiParent = Me
-        frmName.BringToFront()
-        frmName.Show()
-    End Sub
-
     Private Sub Chkselectall_CheckedChanged(sender As Object, e As EventArgs) Handles Chkselectall.CheckedChanged
         ''  selectDGVEmployee()
         Dim num As Integer = 0
@@ -522,7 +596,7 @@ Public Class frmPayslipMailSend
         End If
     End Sub
 
-    Private Sub BtnMailsend_Click(sender As Object, e As EventArgs) Handles BtnMailsend.Click
+    Private Sub BtnMailsend_Click(sender As Object, e As EventArgs)
 
         Try
             Generate_Payslip()
@@ -615,13 +689,13 @@ Public Class frmPayslipMailSend
             'Dim e_mail As New MailMessage()
 
             'Smtp_Server.UseDefaultCredentials = False
-            'Smtp_Server.Credentials = New Net.NetworkCredential("R9944494264@gmail.com", "wycsupthsoeugydy")
+            'Smtp_Server.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
             'Smtp_Server.Port = 587
             'Smtp_Server.EnableSsl = True
             'Smtp_Server.Host = "smtp.gmail.com"
             'e_mail = New MailMessage()
-            'e_mail.From = New MailAddress("R9944494264@gmail.com")
-            'e_mail.To.Add("R9944494264@gmail.com")
+            'e_mail.From = New MailAddress("sathuragirimotorworksacc@gmail.com")
+            'e_mail.To.Add("sathuragirimotorworksacc@gmail.com")
             'e_mail.Subject = "Pay Slip For L.S Spinning Mills  Pvt Limited..."
             'e_mail.IsBodyHtml = False
             'e_mail.Body = ""
@@ -641,7 +715,7 @@ Public Class frmPayslipMailSend
 
             If memailid <> "" And memailid <> "0" Then
 
-                Dim mfrommailid As String = "R9944494264@gmail.com"
+                Dim mfrommailid As String = "sathuragirimotorworksacc@gmail.com"
 
                 Dim mail As New MailMessage()
 
@@ -649,7 +723,7 @@ Public Class frmPayslipMailSend
                 SmtpServer.UseDefaultCredentials = False
                 SmtpServer.EnableSsl = True
                 SmtpServer.Host = "smtp.gmail.com"
-                SmtpServer.Credentials = New Net.NetworkCredential("R9944494264@gmail.com", "wycsupthsoeugydy")
+                SmtpServer.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
                 SmtpServer.Port = 587
 
                 mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
@@ -713,7 +787,7 @@ Public Class frmPayslipMailSend
                     'SSQL = "select *  from  Fun_PRoll_Payslip ('2022-11-30' )   where   empcode    ='" & mempcode & " '"
                     dsMain = ReturnMultipleValue(SSQL, mvarDbasename)
 
-                    'dsMain = mobjclssalaryreport.GetEmpPayslip_Report(mselectedvalues, sex, ATM, CbxEmpname.Text, mempcode, mFromDate, mvarEndda 
+                    'dsMain = mobjclssalaryreport.GetEmpPayslip_Report(mselectedvalues, sex, ATM, CbxEmpname.Text, mempcode, mFromDate, mvarEndda
                     If dsMain.Tables(0).Rows.Count <= 0 Then Exit Sub
 
                     SSQL = ""
@@ -760,7 +834,7 @@ Public Class frmPayslipMailSend
         End Try
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs)
         Try
             Dim body As String = Me.PopulateBody("John",
           "Fetch multiple values as Key Value pair in ASP.Net AJAX AutoCompleteExtender",
@@ -769,7 +843,7 @@ Public Class frmPayslipMailSend
           ("Here Mudassar Ahmed Khan has explained how to fetch multiple column values i.e. ID and Text values in" &
           " the ASP.Net AJAX Control Toolkit AutocompleteExtender" &
           "and also how to fetch the select text and value server side on postback"))
-            Me.SendHtmlFormattedEmail("R9944494264@gmail.com", "New article published!", body)
+            Me.SendHtmlFormattedEmail("sathuragirimotorworksacc@gmail.com", "New article published!", body)
         Catch ex As Exception
             Show_Message(ex.Message)
 
@@ -780,7 +854,7 @@ Public Class frmPayslipMailSend
 
             If memailid <> "" And memailid <> "0" Then
 
-                Dim mfrommailid As String = "R9944494264@gmail.com"
+                Dim mfrommailid As String = "sathuragirimotorworksacc@gmail.com"
 
                 Dim mail As New MailMessage()
 
@@ -788,7 +862,7 @@ Public Class frmPayslipMailSend
                 SmtpServer.UseDefaultCredentials = False
                 SmtpServer.EnableSsl = True
                 SmtpServer.Host = "smtp.gmail.com"
-                SmtpServer.Credentials = New Net.NetworkCredential("R9944494264@gmail.com", "wycsupthsoeugydy")
+                SmtpServer.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
                 SmtpServer.Port = 587
 
                 mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
@@ -821,14 +895,121 @@ Public Class frmPayslipMailSend
         End Try
     End Function
     Protected Sub SendEmail(ByVal sender As Object, ByVal e As EventArgs)
-        Dim body As String = Me.PopulateBody("John",
-            "Fetch multiple values as Key Value pair in ASP.Net AJAX AutoCompleteExtender",
-            "http://www.aspsnippets.com/Articles/Fetch-multiple-values-as-Key-Value" &
-            "-pair-in-ASP.Net-AJAX-AutoCompleteExtender.aspx",
-            ("Here Mudassar Ahmed Khan has explained how to fetch multiple column values i.e. ID and Text values in" &
-            " the ASP.Net AJAX Control Toolkit AutocompleteExtender" &
-            "and also how to fetch the select text and value server side on postback"))
-        Me.SendHtmlFormattedEmail("R9944494264@gmail.com", "New article published!", body)
+        'Dim body As String = Me.PopulateBody("John",
+        '    "Fetch multiple values as Key Value pair in ASP.Net AJAX AutoCompleteExtender",
+        '    "http://www.aspsnippets.com/Articles/Fetch-multiple-values-as-Key-Value" &
+        '    "-pair-in-ASP.Net-AJAX-AutoCompleteExtender.aspx",
+        '    ("Here Mudassar Ahmed Khan has explained how to fetch multiple column values i.e. ID and Text values in" &
+        '    " the ASP.Net AJAX Control Toolkit AutocompleteExtender" &
+        '    "and also how to fetch the select text and value server side on postback"))
+
+        For i As Integer = 0 To Me.dgvReport.Rows.Count - 1
+            If Convert.ToBoolean(Me.dgvReport.Rows(i).Cells(0).Value = True) Then
+                Text = " Payslip Starts Successfully."
+
+                'Check condition
+
+                Dim mempcode As String
+                mempcode = dgvReport.Rows(i).Cells(2).Value
+                Dim memailid = dgvReport.Rows(i).Cells(4).Value
+                Dim userName = dgvReport.Rows(i).Cells(2).Value
+
+                Dim FingerId = "krk.itp@gmail.com"
+                Dim sdate = dgvReport.Rows(i).Cells(2).Value
+                Dim catname = dgvReport.Rows(i).Cells(2).Value
+                Dim Deptname = dgvReport.Rows(i).Cells(2).Value
+                Dim DesgnName = dgvReport.Rows(i).Cells(2).Value
+                Dim UANNO = dgvReport.Rows(i).Cells(2).Value
+                Dim ESINO = dgvReport.Rows(i).Cells(2).Value
+                Dim OldBalance = dgvReport.Rows(i).Cells(2).Value
+                Dim Advance = dgvReport.Rows(i).Cells(2).Value
+                Dim AdvanceLess = dgvReport.Rows(i).Cells(2).Value
+                Dim Present = dgvReport.Rows(i).Cells(2).Value
+                Dim GrossAmount = dgvReport.Rows(i).Cells(2).Value
+                Dim PF = dgvReport.Rows(i).Cells(2).Value
+                Dim ESI = dgvReport.Rows(i).Cells(2).Value
+                Dim LOPAmount = dgvReport.Rows(i).Cells(2).Value
+                Dim NetSalary = dgvReport.Rows(i).Cells(2).Value
+                Dim AdvanceBalance = dgvReport.Rows(i).Cells(2).Value
+
+                Dim body As String = String.Empty
+
+                ''   mvarReportName = mvarReportPath & "\REPORTS\HRD\Attendance\EmpAttendanceStatuswise_Rep.rpt"
+                ''   Dim reader As StreamReader = New StreamReader(mvarReportPath & "\REPORTS\Invoice\EmailTemplate.htm")
+                Dim reader As StreamReader = New StreamReader(mvarReportPath & "\REPORTS\email\Payslip.html")
+
+                '
+                ''   Dim reader As StreamReader = New StreamReader(mvarReportPath("~/EmailTemplate.htm"))
+                body = reader.ReadToEnd
+                body = body.Replace("{UserName}", userName)
+
+                body = body.Replace("{EmpName}", userName)
+                body = body.Replace("{UanNo}", UANNO)
+                body = body.Replace("{ESINo}", ESINO)
+                body = body.Replace("{Adv_Opening}", OldBalance)
+                body = body.Replace("{Current_Advance}", Advance)
+                body = body.Replace("{Current_paid}", AdvanceLess)
+                body = body.Replace("{Present}", Present)
+                body = body.Replace("{GrossAmount}", GrossAmount)
+                body = body.Replace("{PFAmount}", PF)
+
+                body = body.Replace("{PFAmount}", PF)
+                body = body.Replace("{EmpESIAmount}", ESI)
+                body = body.Replace("{LOPAmount}", LOPAmount)
+                body = body.Replace("{NetAmount}", NetSalary)
+                body = body.Replace("{Adv_Balance}", AdvanceBalance)
+
+                ''    Me.SendHtmlFormattedEmail("sathuragirimotorworksacc@gmail.com", "New article published!", body)
+
+                ''   Dim mname As String, mdates As String, memailid As String, msubject As String, mfilename As String
+                Dim msubject As String = "Payslip"
+                memailid = "k.rajkumarmca@gmail.com"
+                '  If memailid <> "" And memailid <> "0" Then
+
+                Dim mfrommailid As String = "sathuragirimotorworksacc@gmail.com"
+
+                Dim mail As New MailMessage()
+
+                Dim SmtpServer As New SmtpClient("smtp.gmail.com")
+                SmtpServer.UseDefaultCredentials = False
+                SmtpServer.EnableSsl = True
+                SmtpServer.Host = "smtp.gmail.com"
+                SmtpServer.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
+                SmtpServer.Port = 587
+
+                mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
+                mail.[To].Add(memailid) 'to_address
+                mail.Subject = msubject
+
+                Dim htmlString As String = "<html>" _
+                        & "  <body>" _
+                            & "   <p> Dear " + userName + " </br></p>" _
+                            & "   <p>  Please find attached Salary Slip of " + userName + " for " + sdate + "." _
+                            & "           .</p>" _
+                        & "      <p> Regards,<br/>HR </br> Sathuragiri Motors. </br> </p>" _
+                        & "     </body>" _
+                        & "     </html>"
+
+                mail.IsBodyHtml = True  ' mail with attachment
+                'mail.Body = htmlString ' mail with attachment
+                mail.Body = body ' mail with attachment
+
+                'mailMessage.Subject = subject
+                'mailMessage.Body = body
+                'mailMessage.IsBodyHtml = True
+
+                ''     Dim attachment As System.Net.Mail.Attachment
+                'attachment = New System.Net.Mail.Attachment(mfilename)
+                'mail.Attachments.Add(attachment)
+
+                SmtpServer.Send(mail)
+                ''  MessageBox.Show("mail Send")
+
+            Else
+
+            End If
+        Next
+
     End Sub
 
     Private Function PopulateBody(ByVal userName As String, ByVal title As String, ByVal url As String, ByVal description As String) As String
@@ -855,33 +1036,33 @@ Public Class frmPayslipMailSend
         memailid = "k.rajkumarmca@gmail.com"
         '  If memailid <> "" And memailid <> "0" Then
 
-        Dim mfrommailid As String = "R9944494264@gmail.com"
+        Dim mfrommailid As String = "sathuragirimotorworksacc@gmail.com"
 
-            Dim mail As New MailMessage()
+        Dim mail As New MailMessage()
 
-            Dim SmtpServer As New SmtpClient("smtp.gmail.com")
-            SmtpServer.UseDefaultCredentials = False
-            SmtpServer.EnableSsl = True
-            SmtpServer.Host = "smtp.gmail.com"
-            SmtpServer.Credentials = New Net.NetworkCredential("R9944494264@gmail.com", "wycsupthsoeugydy")
-            SmtpServer.Port = 587
+        Dim SmtpServer As New SmtpClient("smtp.gmail.com")
+        SmtpServer.UseDefaultCredentials = False
+        SmtpServer.EnableSsl = True
+        SmtpServer.Host = "smtp.gmail.com"
+        SmtpServer.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
+        SmtpServer.Port = 587
 
-            mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
-            mail.[To].Add(memailid) 'to_address
-            mail.Subject = msubject
+        mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
+        mail.[To].Add(memailid) 'to_address
+        mail.Subject = msubject
 
-            Dim htmlString As String = "<html>" _
-                    & "  <body>" _
-                        & "   <p> Dear " + mname + " </br></p>" _
-                        & "   <p>  Please find attached Salary Slip of " + mname + " for " + mdates + "." _
-                        & "           .</p>" _
-                    & "      <p> Regards,<br/>HR </br> L.S. Spinning Mills Private Limited </br> </p>" _
-                    & "     </body>" _
-                    & "     </html>"
+        Dim htmlString As String = "<html>" _
+                & "  <body>" _
+                    & "   <p> Dear " + mname + " </br></p>" _
+                    & "   <p>  Please find attached Salary Slip of " + mname + " for " + mdates + "." _
+                    & "           .</p>" _
+                & "      <p> Regards,<br/>HR </br> Sathuragiri Motors. </br> </p>" _
+                & "     </body>" _
+                & "     </html>"
 
-            mail.IsBodyHtml = True  ' mail with attachment
-            'mail.Body = htmlString ' mail with attachment
-            mail.Body = body ' mail with attachment
+        mail.IsBodyHtml = True  ' mail with attachment
+        'mail.Body = htmlString ' mail with attachment
+        mail.Body = body ' mail with attachment
 
         'mailMessage.Subject = subject
         'mailMessage.Body = body
@@ -892,11 +1073,144 @@ Public Class frmPayslipMailSend
         'mail.Attachments.Add(attachment)
 
         SmtpServer.Send(mail)
-            ''  MessageBox.Show("mail Send")
-            attachment.Dispose()
+        ''  MessageBox.Show("mail Send")
+        attachment.Dispose()
         'Else
 
         'End If
 
+    End Sub
+
+    Private Sub chkall_CheckedChanged(sender As Object, e As EventArgs) Handles chkall.CheckedChanged
+
+    End Sub
+
+    Private Sub btmailsend_Click(sender As Object, e As EventArgs) Handles btmailsend.Click
+        Try
+            'Dim body As String = Me.PopulateBody("John",
+            '    "Fetch multiple values as Key Value pair in ASP.Net AJAX AutoCompleteExtender",
+            '    "http://www.aspsnippets.com/Articles/Fetch-multiple-values-as-Key-Value" &
+            '    "-pair-in-ASP.Net-AJAX-AutoCompleteExtender.aspx",
+            '    ("Here Mudassar Ahmed Khan has explained how to fetch multiple column values i.e. ID and Text values in" &
+            '    " the ASP.Net AJAX Control Toolkit AutocompleteExtender" &
+            '    "and also how to fetch the select text and value server side on postback"))
+
+            For i As Integer = 0 To Me.dgvReport.Rows.Count - 1
+                If Convert.ToBoolean(Me.dgvReport.Rows(i).Cells(0).Value = True) Then
+                    Text = " Payslip Starts Successfully."
+
+                    'Check condition
+
+                    Dim mempcode As String
+                    mempcode = dgvReport.Rows(i).Cells(2).Value
+                    Dim FingerId = dgvReport.Rows(i).Cells(4).Value
+                    Dim userName = dgvReport.Rows(i).Cells(3).Value
+
+                    Dim msaldate As String = ""
+                    msaldate = Format(Dtpfromdate.Value, "MMM-yyyy")
+
+                    Dim sdate = msaldate
+                    Dim catname = dgvReport.Rows(i).Cells(5).Value
+                    Dim Deptname = dgvReport.Rows(i).Cells(6).Value
+                    'Dim DesgnName = dgvReport.Rows(i).Cells(2).Value
+                    Dim UANNO = dgvReport.Rows(i).Cells(7).Value
+                    Dim ESINO = dgvReport.Rows(i).Cells(8).Value
+                    Dim OldBalance = dgvReport.Rows(i).Cells(9).Value
+                    Dim Advance = dgvReport.Rows(i).Cells(10).Value
+                    Dim AdvanceLess = dgvReport.Rows(i).Cells(11).Value
+                    Dim Present = dgvReport.Rows(i).Cells(12).Value
+                    Dim GrossAmount = dgvReport.Rows(i).Cells(13).Value
+                    Dim PF = dgvReport.Rows(i).Cells(14).Value
+                    Dim ESI = dgvReport.Rows(i).Cells(15).Value
+                    Dim LOPAmount = dgvReport.Rows(i).Cells(16).Value
+                    Dim NetSalary = dgvReport.Rows(i).Cells(17).Value
+                    Dim AdvanceBalance = dgvReport.Rows(i).Cells(18).Value
+                    Dim memailid = dgvReport.Rows(i).Cells(19).Value
+
+                    Dim body As String = String.Empty
+
+                    ''   mvarReportName = mvarReportPath & "\REPORTS\HRD\Attendance\EmpAttendanceStatuswise_Rep.rpt"
+                    ''   Dim reader As StreamReader = New StreamReader(mvarReportPath & "\REPORTS\Invoice\EmailTemplate.htm")
+                    Dim reader As StreamReader = New StreamReader(mvarReportPath & "\REPORTS\email\Payslip.html")
+
+                    '
+                    ''   Dim reader As StreamReader = New StreamReader(mvarReportPath("~/EmailTemplate.htm"))
+                    body = reader.ReadToEnd
+                    body = body.Replace("{UserName}", userName)
+                    body = body.Replace("{Sdate}", msaldate)
+
+                    body = body.Replace("{EmpName}", userName)
+                    body = body.Replace("{UanNo}", UANNO)
+                    body = body.Replace("{ESINo}", ESINO)
+                    body = body.Replace("{Adv_Opening}", OldBalance)
+                    body = body.Replace("{Current_Advance}", Advance)
+                    body = body.Replace("{Current_paid}", AdvanceLess)
+                    body = body.Replace("{Present}", Present)
+                    body = body.Replace("{GrossAmount}", GrossAmount)
+                    body = body.Replace("{PFAmount}", PF)
+
+                    body = body.Replace("{PFAmount}", PF)
+                    body = body.Replace("{EmpESIAmount}", ESI)
+                    body = body.Replace("{LOPAmount}", LOPAmount)
+                    body = body.Replace("{NetAmount}", NetSalary)
+                    body = body.Replace("{Adv_Balance}", AdvanceBalance)
+
+                    ''    Me.SendHtmlFormattedEmail("sathuragirimotorworksacc@gmail.com", "New article published!", body)
+
+                    ''   Dim mname As String, mdates As String, memailid As String, msubject As String, mfilename As String
+                    Dim msubject As String = "Payslip"
+
+                    If memailid <> "" And memailid <> "0" Then
+                        Dim mfrommailid As String = "sathuragirimotorworksacc@gmail.com"
+
+                        Dim mail As New MailMessage()
+
+                        Dim SmtpServer As New SmtpClient("smtp.gmail.com")
+                        SmtpServer.UseDefaultCredentials = False
+                        SmtpServer.EnableSsl = True
+                        SmtpServer.Host = "smtp.gmail.com"
+                        SmtpServer.Credentials = New Net.NetworkCredential("sathuragirimotorworksacc@gmail.com", "txhuyiodnrjpgflu")
+                        SmtpServer.Port = 587
+
+                        mail.From = New MailAddress(mfrommailid) 'your_email_address@gmail.com
+                        mail.[To].Add(memailid) 'to_address
+                        mail.Subject = msubject
+
+                        Dim htmlString As String = "<html>" _
+                            & "  <body>" _
+                                & "   <p> Dear " + userName + " </br></p>" _
+                                & "   <p>  Please find attached Salary Slip of " + userName + " for " + sdate + "." _
+                                & "           .</p>" _
+                            & "      <p> Regards,<br/>HR </br> Sathuragiri Motors. </br> </p>" _
+                            & "     </body>" _
+                            & "     </html>"
+
+                        mail.IsBodyHtml = True  ' mail with attachment
+                        'mail.Body = htmlString ' mail with attachment
+                        mail.Body = body ' mail with attachment
+
+                        'mailMessage.Subject = subject
+                        'mailMessage.Body = body
+                        'mailMessage.IsBodyHtml = True
+
+                        ''     Dim attachment As System.Net.Mail.Attachment
+                        'attachment = New System.Net.Mail.Attachment(mfilename)
+                        'mail.Attachments.Add(attachment)
+
+                        SmtpServer.Send(mail)
+                        Text = memailid + " Mail Send"
+
+                        ''  MessageBox.Show("mail Send")
+                    Else
+                    End If
+
+                Else
+
+                End If
+            Next
+        Catch ex As Exception
+            Show_Message(ex.Message)
+
+        End Try
     End Sub
 End Class
