@@ -1,0 +1,70 @@
+
+Comp_Code     	 String	100
+ academicyear 	 Number	2
+Adm_ID   	String	100
+Adm_Date 	DateTime
+Adm_Type  	String	100
+Admission_No   	String	100
+Fee_ChallanNo   	String	100
+Class  		String	10
+Section 		String 10
+Name   		String	100
+Sex   		String	10
+DOB   		DateTime
+Height 		Number 2
+Weight   	Number	2
+Blood_Group  	String	10
+Religion  	String	20
+Caste   	String	20
+Community   	String	100
+Tem_Address  	String	100
+Temp_City   	String	100
+Temp_State  	String	100
+Temp_Country  	String	100
+Temp_PinCode  	String	100
+Per_Address   	String	100
+Per_City   	String	100
+Per_State   	String	100
+Per_Country   	String	100
+Per_PinCode  	String	100
+Pers_Marks1  	String	100
+Pers_Marks2  	String	100
+Father_name   	String	100
+Fat_Occupation 		 String	100
+Fat_Income  	String	100
+Fat_PassBook_no 	String	100
+Fat_Bankname   		String	100
+Fat_Office_Add  	String	100
+Fat_Mobile_N0   	String	100
+Fat_MailID  		String	100
+Mother_name  		String	100
+Mot_Occu	  String	100
+Mot_Income   		String	100
+Mot_PassbookNo 	 String	100
+Mot_Bankname   		String	100
+Mot_Office_Add	   String	100
+Mot_Mobile_No   	String	100
+Mot_mail_ID   	String	100
+Student_Type 	String	100
+TransportID  	String	100
+Bus_stop   	String	100
+Bus_No  	String	100
+Trip   		String	100
+Hostler_ID  		String	100
+Comm_Cert_NO  		String	100
+Com_Iss_By   String	100
+Com_Iss_Dist	 	String	100
+EMISE_no   		String	100
+Employment_No   	String	100
+Adhar_ID   		String	100
+Ration_ID  		String	100
+AdmissionClass 		 String	100
+Present_Class  		 String	100
+Prev_Org_Name  		 String	100
+TC_Number  	String	100
+Delete_Mode  	String	100
+IsActive   	Number
+Created_By   	String	10
+Created_Date    DateTime
+Modified_By     String	10
+Modified_date   DateTime	
