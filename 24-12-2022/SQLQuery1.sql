@@ -16,6 +16,6 @@ select  empcode
 where Empcode ='ATM117'
 
 
-select * from Emp_Master where EmpName like '%NARENDRAN R%'
-select Entry_No from PFESISettings
-select * from Location_Details
+--select * from Emp_Master where EmpName like '%NARENDRAN R%'
+--select Entry_No from PFESISettings
+--select * from Location_Details
