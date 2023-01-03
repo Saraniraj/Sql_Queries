@@ -175,13 +175,37 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code ,a.Entry_Date
 ,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  
 ,shift 
 
-
-
-
-
-
-
 ---*****************************Comber Report Ends *****************************
+
+---*****************************Drawing Report Starts *****************************
+SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
+,a.Entry_Date 
+,a.machine_Code
+,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
+,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
+,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
+,'Drawing' as Type
+ --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
+  
+FROM [eSpin]..[Esp_Drawing_Hank] a  
+left outer join Esp_DrawingMachine_Details c 
+on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
+
+left outer join Esp_DrawingCount_details e
+on e.Count_Desc=a.Count_Code 
+and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
+and  a.Sub_Location_Code=e.Sub_Location   
+
+where a.Location_code like 'spinning'
+and a.Entry_Date between '2022-12-02' and '2022-12-02'   
+and e.Sub_Count_code ='50sCC'
+And a.delete_mode=0   
+group by a.Comp_code,a.Location_code,a.Fin_year_code 
+,a.Entry_Date 
+,a.machine_Code
+,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
+,Shift 
+---*****************************  Drawing Report Ends *****************************
 
 ---*****************************Simplex Report Starts *****************************
 
@@ -215,69 +239,9 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code
 
 ---*****************************Simplex Report Ends *****************************
 
----*****************************Drawing Report Starts *****************************
-SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
-,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
-,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
-,'Drawing' as Type
- --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
-  
-FROM [eSpin]..[Esp_Drawing_Hank] a  
-left outer join Esp_DrawingMachine_Details c 
-on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
 
-left outer join Esp_DrawingCount_details e
-on e.Count_Desc=a.Count_Code 
-and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
-and  a.Sub_Location_Code=e.Sub_Location   
-
-where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-02' and '2022-12-02'   
-and e.Sub_Count_code ='50sCC'
-And a.delete_mode=0   
-group by a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
-,Shift 
-
-
-----**************** sIMPLEX
-
-
-
-SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
-,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
-,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
-,'Drawing' as Type
- --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
-  
-FROM [eSpin]..[Esp_Drawing_Hank] a  
-left outer join Esp_DrawingMachine_Details c 
-on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
-
-left outer join Esp_DrawingCount_details e
-on e.Count_Desc=a.Count_Code 
-and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
-and  a.Sub_Location_Code=e.Sub_Location   
-
-where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-02' and '2022-12-02'   
-and e.Sub_Count_code ='50sCC'
-And a.delete_mode=0   
-group by a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
-,Shift 
----------------***********************
-SELECT A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code    
+---*****************************Spinning Report Starts *****************************
+ SELECT A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code    
 ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Market,      
 count(distinct(a.Machine_Code))as no_of_frames,a.Conv_Factor ,sum(a.hank) as hank,a.Machine_Code,      
    
@@ -308,18 +272,14 @@ where a.Location_code like 'spinning'
 and a.Entry_Date between '2022-12-05' and '2022-12-05'   
 and e.Sub_Count_code ='50sCC'
 And a.delete_mode=0   
-
-
-             
---And c.Effect_From_date <=@todate and  c.effect_to_date>= @todate       
---and c.IsActive=1      
-And a.delete_mode=0  --And a.Shift = 'I'       
+ 
+And a.delete_mode=0     
 group by A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code
 ,e.sub_count_code,e.Mix_no,e.Lot_No,e.Market,      
 a.Actual_Count,a.Conv_Factor,a.twist_Contraction,a.Machine_Code,A.Shift,e.Std_Grams_Spindl       
-
-
----------aUTOCONER pRODUCTIONS--------------
+---*****************************Spinning Report Ends *****************************
+---*****************************AUTOCONER Report STARTS *****************************
+ 
 SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
 ,a.Entry_Date 
 ,a.machine_Code
@@ -347,6 +307,38 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code
 ,a.Entry_Date ,a.machine_Code
 ,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  ,shift,a.No_of_Drums
 ,a.Prodn_Kgs
+---*****************************AUTOCONER Report ENDS *****************************
+
+SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
+,a.Entry_Date 
+,a.machine_Code
+,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
+,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
+,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
+,'Drawing' as Type
+ --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
+  
+FROM [eSpin]..[Esp_Drawing_Hank] a  
+left outer join Esp_DrawingMachine_Details c 
+on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
+
+left outer join Esp_DrawingCount_details e
+on e.Count_Desc=a.Count_Code 
+and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
+and  a.Sub_Location_Code=e.Sub_Location   
+
+where a.Location_code like 'spinning'
+and a.Entry_Date between '2022-12-02' and '2022-12-02'   
+and e.Sub_Count_code ='50sCC'
+And a.delete_mode=0   
+group by a.Comp_code,a.Location_code,a.Fin_year_code 
+,a.Entry_Date 
+,a.machine_Code
+,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
+,Shift 
+---------------***********************
+
+
 
 
 
