@@ -1,3 +1,6 @@
+use eSpin
+go
+
 ---*****************************Mixing Report *****************************
 SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
 ,a.Mix_Date 
@@ -12,6 +15,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,'' as Shift  ,'Mixing' as Type
 FROM [eSpin]..Esp_Mix_main a  
 left join Esp_Mix_line as b on 
@@ -44,6 +48,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,a.Shift   ,'Carding' as Type
 FROM [eSpin]..Esp_Carding_Main a  
 left join Esp_Carding_Line as b  
@@ -74,6 +79,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,Shift   ,'Sliver' as Type
 FROM [eSpin]..Esp_Sliver_Hank a  
 left outer join Esp_SliverMachine_Details c 
@@ -109,6 +115,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 --,((SUM(a.hank) /(e.Lap_Hank *2.2046)  )/SUM((c.mc_speed*1.09*8*60)/840) ) as  Eff_Pers
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,Shift ,'Rippon' as Type
 FROM [eSpin]..Esp_RipponLap_Hank a  
 left outer join Esp_RipponLapMachine_details c 
@@ -144,6 +151,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,Shift ,'PRE-Drawing' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -181,6 +189,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,(((SUM(a.hank)) /(Hanks*2.2046))*No_Of_Delivery) * (efficiency/100)    as CBR_ACT_PROD
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,Shift ,'COMBER' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -216,6 +225,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD
 ,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 ,Shift ,'Drawing' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -256,6 +266,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,(SUM((3.1412 * c.Front_Roll_dia * c.Front_Roll_speed  * e.Efficiency*8*60)/(84000 * 36)) /(Hank_Count*2.2046))*
 (No_of_Spindles-idle_spindle) AS SPX_STD_PROD
 ,(((SUM(a.hank) /(Hank_Count*2.2046))* (No_of_Spindles-idle_spindle)) * (efficiency/100) ) AS SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
 
 ,Shift ,'Simplex' as Type
 FROM [eSpin]..Esp_Simplex_Hank a  
@@ -278,7 +289,50 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code
 ,No_of_Spindles,idle_spindle,Efficiency 
 
 ---*****************************Simplex Report Ends *****************************
+union all
+ 
+---*****************************AUTOCONER Report STARTS *****************************
+ 
+SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
+,a.Entry_Date 
+ 
+,a.Count_code   ,e.sub_count_code,e.Mix_no
+---,e.Lot_No 
+,0 AS No_Of_Bales,0 AS Mix_Kgs
+,0 AS No_Of_Mc,0  AS Carding_Kgs,0 Card_Eff_P
+,0 AS Sliver_STD_kGS,0 AS Sliver_ACT_PROD
+,0 AS Rippon_STD_kGS
+,0 AS Rippon_ACT_PROD
+,0 as    PREDRG_STD_PROD ,0 as  PREDRG_ACT_PROD
+,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
+,0  as DRG_STD_PROD,0 as DRG_ACT_PROD
+,0    AS SPX_STD_PROD,0 as SPX_ACT_PROD
+,a.No_of_Drums as no_of_Drums,a.Prodn_Kgs as ACR_PROD 
 
+
+,Shift 
+,'Autoconer' as Type
+ 
+ 
+  
+FROM [eSpin]..[Esp_Autoconer_Production] a  
+left outer join Esp_AutoConerMachine_Details c 
+on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
+
+left outer join Esp_AutoconerCount_details e
+on e.Count_Desc=a.Count_Code and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
+and  a.Sub_Location_Code=e.Sub_Location   
+
+where a.Location_code like 'spinning'
+and a.Entry_Date between '2022-12-03' and '2022-12-03'   
+and e.Sub_Count_code ='50sCC'
+And a.delete_mode=0   
+group by a.Comp_code,a.Location_code,a.Fin_year_code 
+
+,a.Entry_Date ,a.machine_Code
+,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  ,shift,a.No_of_Drums
+,a.Prodn_Kgs
+---*****************************AUTOCONER Report ENDS *****************************
 
 ---*****************************Spinning Report Starts *****************************
 SELECT A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code    
@@ -339,7 +393,7 @@ on e.Count_Desc=a.Count_Code and  e.comp_code=a.comp_code and a.Location_code=e.
 and  a.Sub_Location_Code=e.Sub_Location   
 
 where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-05' and '2022-12-05'   
+and a.Entry_Date between '2022-12-03' and '2022-12-03'   
 and e.Sub_Count_code ='50sCC'
 And a.delete_mode=0   
 group by a.Comp_code,a.Location_code,a.Fin_year_code 
@@ -349,31 +403,31 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code
 ,a.Prodn_Kgs
 ---*****************************AUTOCONER Report ENDS *****************************
 
-SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
-,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
-,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
-,'Drawing' as Type
---({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
+--SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
+--,a.Entry_Date 
+--,a.machine_Code
+--,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
+--,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
+--,((SUM((3.1412 * a.Delivery_Roll_dia * a.Delivery_Roll_speed * e.Efficiency*8*60)/(84000 * 36)) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ) as DRG_STD_PROD,Shift 
+--,'Drawing' as Type
+----({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
-FROM [eSpin]..[Esp_Drawing_Hank] a  
-left outer join Esp_DrawingMachine_Details c 
-on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
+--FROM [eSpin]..[Esp_Drawing_Hank] a  
+--left outer join Esp_DrawingMachine_Details c 
+--on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
 
-left outer join Esp_DrawingCount_details e
-on e.Count_Desc=a.Count_Code 
-and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
-and  a.Sub_Location_Code=e.Sub_Location   
+--left outer join Esp_DrawingCount_details e
+--on e.Count_Desc=a.Count_Code 
+--and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
+--and  a.Sub_Location_Code=e.Sub_Location   
 
-where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-02' and '2022-12-02'   
-and e.Sub_Count_code ='50sCC'
-And a.delete_mode=0   
-group by a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
-,Shift 
----------------***********************
+--where a.Location_code like 'spinning'
+--and a.Entry_Date between '2022-12-02' and '2022-12-02'   
+--and e.Sub_Count_code ='50sCC'
+--And a.delete_mode=0   
+--group by a.Comp_code,a.Location_code,a.Fin_year_code 
+--,a.Entry_Date 
+--,a.machine_Code
+--,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Hank_Count,c.No_of_delivery 
+--,Shift 
+-----------------***********************
