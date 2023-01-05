@@ -16,6 +16,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,'' as Shift  ,'Mixing' as Type
 FROM [eSpin]..Esp_Mix_main a  
 left join Esp_Mix_line as b on 
@@ -49,6 +50,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,a.Shift   ,'Carding' as Type
 FROM [eSpin]..Esp_Carding_Main a  
 left join Esp_Carding_Line as b  
@@ -80,6 +82,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift   ,'Sliver' as Type
 FROM [eSpin]..Esp_Sliver_Hank a  
 left outer join Esp_SliverMachine_Details c 
@@ -116,6 +119,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 --,((SUM(a.hank) /(e.Lap_Hank *2.2046)  )/SUM((c.mc_speed*1.09*8*60)/840) ) as  Eff_Pers
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift ,'Rippon' as Type
 FROM [eSpin]..Esp_RipponLap_Hank a  
 left outer join Esp_RipponLapMachine_details c 
@@ -152,6 +156,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift ,'PRE-Drawing' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -190,6 +195,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0 as  DRG_STD_PROD, 0 as    DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift ,'COMBER' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -226,6 +232,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,ROUND(((SUM(a.hank) /(e.Hank_Count*2.2046))*c.No_Of_Delivery ),3) as DRG_ACT_PROD
 ,0 as SPX_STD_PROD,0 as SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift ,'Drawing' as Type
 --({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
@@ -267,7 +274,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 (No_of_Spindles-idle_spindle) AS SPX_STD_PROD
 ,(((SUM(a.hank) /(Hank_Count*2.2046))* (No_of_Spindles-idle_spindle)) * (efficiency/100) ) AS SPX_ACT_PROD
 ,0 as no_of_Drums,0 as ACR_PROD 
-
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift ,'Simplex' as Type
 FROM [eSpin]..Esp_Simplex_Hank a  
 left outer join Esp_SimplexMachine_Details c 
@@ -309,7 +316,7 @@ SELECT a.Comp_code,a.Location_code,a.Fin_year_code
 ,0    AS SPX_STD_PROD,0 as SPX_ACT_PROD
 ,a.No_of_Drums as no_of_Drums,a.Prodn_Kgs as ACR_PROD 
 
-
+,0 as no_of_frames,0 as NO_OF_Spindl,0 as std_grams_spindl,0 as SPG_Prod,0 as utilize_per
 ,Shift 
 ,'Autoconer' as Type
  
@@ -333,20 +340,49 @@ group by a.Comp_code,a.Location_code,a.Fin_year_code
 ,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  ,shift,a.No_of_Drums
 ,a.Prodn_Kgs
 ---*****************************AUTOCONER Report ENDS *****************************
-
 ---*****************************Spinning Report Starts *****************************
+union all
+
+select   
+a.Comp_code,a.Location_code,a.Fin_year_code,a.ENTRY_DATE
+,a.Count_code,a.sub_count_code,a.Mix_no 
+,0 AS No_Of_Bales,0 AS Mix_Kgs
+,0 AS No_Of_Mc,0  AS Carding_Kgs,0 Card_Eff_P
+,0 AS Sliver_STD_kGS,0 AS Sliver_ACT_PROD
+,0 AS Rippon_STD_kGS
+,0 AS Rippon_ACT_PROD
+,0 as    PREDRG_STD_PROD ,0 as  PREDRG_ACT_PROD
+,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
+,0  as DRG_STD_PROD,0 as DRG_ACT_PROD
+,0    AS SPX_STD_PROD,0 as SPX_ACT_PROD
+,0 as no_of_Drums,0 as ACR_PROD 
+,
+count(a.Machine_Code)as no_of_frames
+,SUM(a.worked_spindl) as NO_OF_Spindl      
+,a.Std_Grams_Spindl as std_grams_spindl
+,(SUM(a.Prodn_kgs)- (sum(a.Waste_Kgs))) as SPG_Prod  
+,(100-(sum(stopped_spndls) * 100)/(SUM(a.worked_spindl) + SUM(a.stopped_spndls))) as utilize_per
+
+,'' as Shift 
+,'SPINNING' as Type
+
+  
+from (  
+
+
 SELECT A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code    
 ,e.sub_count_code,e.Mix_no,e.Lot_No ,e.Market,      
-count(distinct(a.Machine_Code))as no_of_frames,a.Conv_Factor ,sum(a.hank) as hank,a.Machine_Code,      
+count(distinct(a.Machine_Code))as no_of_frames,a.Conv_Factor ,sum(a.hank) as hank,a.Machine_Code   
    
-((sum(c.No_Of_Spindles)/8) * 8) - (((sum(d.stop_time1)+sum(d.stop_time2)+sum(d.stop_time3)+sum(d.stop_time4)+sum(d.stop_time5))/60) * (sum(c.No_Of_Spindles)/8)) as worked_spindl,      
+,((sum(c.No_Of_Spindles)/8) * 8) - (((sum(d.stop_time1)+sum(d.stop_time2)+sum(d.stop_time3)+sum(d.stop_time4)+sum(d.stop_time5))/60) * (sum(c.No_Of_Spindles)/8)) as worked_spindl,      
       
 (((sum(d.stop_time1)+sum(d.stop_time2)+sum(d.stop_time3)+sum(d.stop_time4)+sum(d.stop_time5))/60) * (sum(c.No_Of_Spindles)/8)) as stopped_spndls,      
       
-e.Std_Grams_Spindl Std_Grams_Spindl,((sum(a.hank))/(2.2046 * (a.Actual_Count))* ((a.twist_Contraction)/100)* sum(c.No_Of_Spindles))  as Prodn_kgs      
+e.Std_Grams_Spindl Std_Grams_Spindl
+,((sum(a.hank))/(2.2046 * (a.Actual_Count))* ((a.twist_Contraction)/100)* sum(c.No_Of_Spindles))  as Prodn_kgs      
 ,sum(g.Waste_Kgs) as Waste_Kgs,A.Actual_Count,A.Twist_Contraction,sum(c.No_Of_Spindles)AS No_Of_Spindles      
- 
-,'Spinning' as Type
+,  a.shift 
+   
 FROM [eSpin]..[Esp_Spinning_Hank] a      
 left outer join Esp_SpinningMachine_Details c on a.comp_code=c.comp_code and a.Location_code=c.location_code and a.Sub_Location_Code=c.Sub_Location       
 and a.Equipment_No =c.Equipment_No       
@@ -360,47 +396,121 @@ and a.Sub_Location_Code=e.Sub_Location
 and a.Count_Code=e.Count_Desc --and e.Count_Desc=c.Running_Count       
 left outer join Esp_Spinning_waste g on a.comp_code=g.comp_code and a.Location_code=g.location_code and a.Sub_Location_Code=g.Sub_location_Code       
 and a.Entry_no=g.Entry_No and a.Entry_Date=g.Entry_Date and a.Equipment_No =g.Equipment_No        
+where          
+ 
+--a.Location_code like  @mLocation_Code         
+--And a.Sub_Location_Code like  @mSubLocation_Code     And   
+a.Comp_Code=   'LS SPIN'         
+And a.Fin_Year_Code= '3'       
+and a.Entry_Date >= '2022-12-04'      
+and a.Entry_Date <= '2022-12-04'               
+and sub_count_code ='50sCC'
+And a.delete_mode=0  --And a.Shift = 'I'       
+group by A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code
+,a.Count_code,e.sub_count_code,e.Mix_no,e.Lot_No,e.Market,   
+a.Actual_Count,a.Conv_Factor,a.twist_Contraction,a.Machine_Code,A.Shift,e.Std_Grams_Spindl       
+  
+) as a  
+group by a.Comp_code,a.Location_code,a.Fin_year_code,a.ENTRY_DATE
+,a.Count_code,a.Std_Grams_Spindl      
+,a.sub_count_code,a.Mix_no 
+
+---*****************************Spinning Report Ends *****************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----*****************************Spinning Report Starts *****************************
+--SELECT a.Comp_code,a.Location_code,a.Fin_year_code,A.ENTRY_DATE
+--,a.Count_code    ,e.sub_count_code,e.Mix_no
+
+
+--,0 AS No_Of_Bales,0 AS Mix_Kgs
+--,0 AS No_Of_Mc,0  AS Carding_Kgs,0 Card_Eff_P
+--,0 AS Sliver_STD_kGS,0 AS Sliver_ACT_PROD
+--,0 AS Rippon_STD_kGS
+--,0 AS Rippon_ACT_PROD
+--,0 as    PREDRG_STD_PROD ,0 as  PREDRG_ACT_PROD
+--,0 as    No_of_Machines,0 as  CBR_STD_PROD,0 as CBR_ACT_PROD
+--,0  as DRG_STD_PROD,0 as DRG_ACT_PROD
+--,0    AS SPX_STD_PROD,0 as SPX_ACT_PROD
+--,0 as no_of_Drums,0 as ACR_PROD 
+
+ 
+--,count(a.Machine_Code)as No_Of_Frames,a.Conv_Factor ,sum(a.hank) as hank  
+   
+--,((sum(c.No_Of_Spindles)/8) * 8) - (((sum(d.stop_time1)+sum(d.stop_time2)+sum(d.stop_time3)+sum(d.stop_time4)+sum(d.stop_time5))/60) * (sum(c.No_Of_Spindles)/8)) as worked_spindl,      
+      
+--(((sum(d.stop_time1)+sum(d.stop_time2)+sum(d.stop_time3)+sum(d.stop_time4)+sum(d.stop_time5))/60) * (sum(c.No_Of_Spindles)/8)) as stopped_spndls,      
+      
+--e.Std_Grams_Spindl Std_Grams_Spindl,((sum(a.hank))/(2.2046 * (a.Actual_Count))* ((a.twist_Contraction)/100)* sum(c.No_Of_Spindles))  as Prodn_kgs      
+--,sum(g.Waste_Kgs) as Waste_Kgs,A.Actual_Count,A.Twist_Contraction,sum(c.No_Of_Spindles)AS No_Of_Spindles      
+--,a.shift 
+--,'Spinning' as Type
+--FROM [eSpin]..[Esp_Spinning_Hank] a      
+--left outer join Esp_SpinningMachine_Details c on a.comp_code=c.comp_code and a.Location_code=c.location_code and a.Sub_Location_Code=c.Sub_Location       
+--and a.Equipment_No =c.Equipment_No       
+--left outer join Esp_Machine_Master f on f.Equipment_No =c.Equipment_No  
+--and f.Comp_Code=c.comp_Code and f.Location_Code=c.Location_code and f.Location=c.Sub_location       
+--left outer join Esp_Spinning_Stoppage  d on a.comp_code=d.comp_code and a.Location_code=d.location_code      
+--and  a.sub_Location_code=d.sub_location_code and a.fin_year_code=d.Fin_year_code and a.Equipment_No =d.Equipment_No 
+--and a.Entry_No=d.Entry_No     and a.Entry_Date=d.Entry_Date       
+--left outer join Esp_SpinningCount_details e on a.comp_code=e.comp_code and a.Location_code=e.location_code
+--and a.Sub_Location_Code=e.Sub_Location       
+--and a.Count_Code=e.Count_Desc --and e.Count_Desc=c.Running_Count       
+--left outer join Esp_Spinning_waste g on a.comp_code=g.comp_code and a.Location_code=g.location_code and a.Sub_Location_Code=g.Sub_location_Code       
+--and a.Entry_no=g.Entry_No and a.Entry_Date=g.Entry_Date and a.Equipment_No =g.Equipment_No        
     
 
-where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-05' and '2022-12-05'   
-and e.Sub_Count_code ='50sCC'
-And a.delete_mode=0   
+--where a.Location_code like 'spinning'
+--and a.Entry_Date between '2022-12-04' and '2022-12-04'   
+--and e.Sub_Count_code ='50sCC'
+--And a.delete_mode=0   
  
-And a.delete_mode=0     
-group by A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code
-,e.sub_count_code,e.Mix_no,e.Lot_No,e.Market,      
-a.Actual_Count,a.Conv_Factor,a.twist_Contraction,a.Machine_Code,A.Shift,e.Std_Grams_Spindl       
+--And a.delete_mode=0     
+--group by A.ENTRY_DATE,a.Comp_code,a.Location_code,a.Fin_year_code,a.Sub_Location_Code,a.Count_code
+--,e.sub_count_code,e.Mix_no,e.Lot_No,e.Market,      
+--a.Actual_Count,a.Conv_Factor,a.twist_Contraction,A.Shift,e.Std_Grams_Spindl       
 ---*****************************Spinning Report Ends *****************************
 ---*****************************AUTOCONER Report STARTS *****************************
  
-SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
-,a.Entry_Date 
-,a.machine_Code
+--SELECT a.Comp_code,a.Location_code,a.Fin_year_code 
+--,a.Entry_Date 
+--,a.machine_Code
 
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
-,a.Prodn_Kgs as prodn_kgs ,a.No_of_Drums as no_of_Drums,Shift 
-,'Autoconer' as Type
+--,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No 
+--,a.Prodn_Kgs as prodn_kgs ,a.No_of_Drums as no_of_Drums,Shift 
+--,'Autoconer' as Type
  
---({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
+----({DrawingCountwis.TotActKgs} / {DrawingCountwis.TotStdKgs})*100 as Eff%
   
-FROM [eSpin]..[Esp_Autoconer_Production] a  
-left outer join Esp_AutoConerMachine_Details c 
-on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
+--FROM [eSpin]..[Esp_Autoconer_Production] a  
+--left outer join Esp_AutoConerMachine_Details c 
+--on  c.machine_code=a.machine_code  and  c.Sub_Location=a.Sub_Location_Code 
 
-left outer join Esp_AutoconerCount_details e
-on e.Count_Desc=a.Count_Code and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
-and  a.Sub_Location_Code=e.Sub_Location   
+--left outer join Esp_AutoconerCount_details e
+--on e.Count_Desc=a.Count_Code and  e.comp_code=a.comp_code and a.Location_code=e.location_code 
+--and  a.Sub_Location_Code=e.Sub_Location   
 
-where a.Location_code like 'spinning'
-and a.Entry_Date between '2022-12-03' and '2022-12-03'   
-and e.Sub_Count_code ='50sCC'
-And a.delete_mode=0   
-group by a.Comp_code,a.Location_code,a.Fin_year_code 
+--where a.Location_code like 'spinning'
+--and a.Entry_Date between '2022-12-03' and '2022-12-03'   
+--and e.Sub_Count_code ='50sCC'
+--And a.delete_mode=0   
+--group by a.Comp_code,a.Location_code,a.Fin_year_code 
 
-,a.Entry_Date ,a.machine_Code
-,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  ,shift,a.No_of_Drums
-,a.Prodn_Kgs
+--,a.Entry_Date ,a.machine_Code
+--,a.Count_code   ,e.sub_count_code,e.Mix_no,e.Lot_No  ,shift,a.No_of_Drums
+--,a.Prodn_Kgs
 ---*****************************AUTOCONER Report ENDS *****************************
 
 --SELECT a.Comp_code,a.Location_code,a.Fin_year_code 

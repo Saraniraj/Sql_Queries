@@ -1,7 +1,7 @@
 USE [DB_HRMS]
 GO
 
-/****** Object:  Table [dbo].[SalStoreTable]    Script Date: 05-Jan-2023 16:20:07 ******/
+/****** Object:  Table [dbo].[SalStoreTable]    Script Date: 05-Jan-2023 17:27:56 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -57,6 +57,7 @@ CREATE TABLE [dbo].[SalStoreTable](
 	[TotalEarnings] [float] NOT NULL,
 	[TotalDeductions] [float] NOT NULL,
 	[NetAmount] [float] NOT NULL,
+	[insurance] [float] NULL,
 	[Advance] [float] NOT NULL,
 	[Canteen] [float] NOT NULL,
 	[Fine] [float] NOT NULL,

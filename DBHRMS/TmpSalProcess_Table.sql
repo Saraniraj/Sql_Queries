@@ -1,7 +1,7 @@
 USE [DB_HRMS]
 GO
 
-/****** Object:  Table [dbo].[TmpSalProcess]    Script Date: 05-Jan-2023 16:19:55 ******/
+/****** Object:  Table [dbo].[TmpSalProcess]    Script Date: 05-Jan-2023 17:28:13 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -58,6 +58,7 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[TotalEarnings] [float] NOT NULL,
 	[TotalDeductions] [float] NOT NULL,
 	[NetAmount] [float] NOT NULL,
+	[insurance] [float] NULL,
 	[Advance] [float] NOT NULL,
 	[Canteen] [float] NOT NULL,
 	[Fine] [float] NOT NULL,

@@ -12,7 +12,7 @@ GO
 -- =============================================
 
 
---  select * from [ESP_ProductionAbstract] ('ls spin','spinning','3','100sCC','2022-04-01','2022-09-30')   
+--  select * from [ESP_ProductionAbstract] ('ls spin','spinning','3','50sCC ','2022-12-01','2022-12-31')   
 
 create FUNCTION  [dbo].[ESP_ProductionAbstract] (
 @comp_code as varchar(30)
