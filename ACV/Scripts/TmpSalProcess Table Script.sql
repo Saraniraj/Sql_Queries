@@ -1,10 +1,9 @@
-USE [DB_HRMS]
+USE [PowerERP_ACV]
 GO
 
-/****** Object:  Table [dbo].[TmpSalProcess]    Script Date: 05-Jan-2023 17:28:13 ******/
+/****** Object:  Table [dbo].[TmpSalProcess]    Script Date: 02-Feb-2023 10:47:57 ******/
 SET ANSI_NULLS ON
 GO
-
 
 SET QUOTED_IDENTIFIER ON
 GO
@@ -17,7 +16,6 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[Location_Code] [nvarchar](50) NULL,
 	[Empcode] [varchar](50) NOT NULL,
 	[EmpID] [bigint] NOT NULL,
-	[Tokenno] [nvarchar](50) NULL,
 	[CatCode] [bigint] NOT NULL,
 	[DeptCode] [bigint] NOT NULL,
 	[DesignCode] [bigint] NOT NULL,
@@ -32,6 +30,7 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[Extra_work_paid] [float] NULL,
 	[NH] [float] NOT NULL,
 	[FH] [float] NOT NULL,
+	[NHFH_Present] [float] NULL,  ----- New Columns Added
 	[LOP] [float] NOT NULL,
 	[CL] [float] NULL,
 	[TotalDays] [float] NOT NULL,
@@ -41,10 +40,6 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[AttnEarning] [float] NOT NULL,
 	[HRAAmount1] [float] NOT NULL,
 	[HRAAmount] [float] NOT NULL,
-	[WashAmount1] [float] NULL,
-	[WashAmount] [float] NULL,
-	[DAAmount1] [float] NULL,
-	[DAAmount] [float] NULL,
 	[PFSource] [float] NOT NULL,
 	[ESISource] [float] NOT NULL,
 	[LeaveSalary] [float] NOT NULL,
@@ -59,11 +54,9 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[TotalEarnings] [float] NOT NULL,
 	[TotalDeductions] [float] NOT NULL,
 	[NetAmount] [float] NOT NULL,
-	[insurance] [float] NULL,
-	[Advance] [float] NOT NULL,
 	[Canteen] [float] NOT NULL,
-	[Fine] [float] NOT NULL,
-	[others] [float] NULL,
+	[BankLoan] [float] NOT NULL,
+	[Advance] [float] NOT NULL,
 	[SalaryType] [varchar](50) NOT NULL,
 	[SalaryDay] [float] NOT NULL,
 	[Factor_ID] [float] NULL,
@@ -91,8 +84,11 @@ CREATE TABLE [dbo].[TmpSalProcess](
 	[Nightshft_ALW] [float] NULL,
 	[Monthly_inc] [float] NULL,
 	[Holiday_wages] [float] NULL,
+	[Petrol_alow] [float] NULL,
 	[Tot_Ded] [numeric](18, 2) NULL,
-	[Net_Salary] [numeric](18, 2) NULL
+	[Net_Salary] [numeric](18, 2) NULL,
+	[By_Bank] [numeric](18, 0) NULL,
+	[By_Cash] [numeric](18, 0) NULL
 ) ON [PRIMARY]
 
 GO
