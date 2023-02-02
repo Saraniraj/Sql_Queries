@@ -13,7 +13,7 @@ select  empcode
 ,washamount1,washamount 
 ,daamount1,daamount,rsperday
 ,* from tmpSalProcess
-where Empcode ='ATM150'
+where Empcode ='ATM117'
 
 
 select * from Emp_Master where EmpName like '%NARENDRAN R%'
