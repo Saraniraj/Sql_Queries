@@ -1,0 +1,105 @@
+SL.NO
+SEC.NO
+DATE OF JOIN
+NAME
+DESIGNATION
+EMP NO
+ESI NO
+UAN
+PF NO
+A/C NO
+BRANCH
+IFS CODE
+SALARY
+EARNED SALARY
+PF SALARY
+ESI
+PF
+LEAVE & LATE FINE
+DEBIT
+INCENTIVE
+OT INCENTIVE
+NET PAY
+No of working days
+NO OF DAYS WORKED
+
+
+
+
+' Dtable.Columns.Add("SLNO", Type.GetType("System.String"))
+ Dtable.Columns.Add("SECNO", Type.GetType("System.String"))
+ Dtable.Columns.Add("DOJ", Type.GetType("System.String"))
+ Dtable.Columns.Add("NAME", Type.GetType("System.String"))
+ Dtable.Columns.Add("DESIGNATION", Type.GetType("System.String"))
+ Dtable.Columns.Add("EMPNO", Type.GetType("System.String"))
+ Dtable.Columns.Add("ESINO", Type.GetType("System.String"))
+ Dtable.Columns.Add("UAN", Type.GetType("System.String"))
+ Dtable.Columns.Add("PFNO", Type.GetType("System.String"))
+ Dtable.Columns.Add("AC_NO", Type.GetType("System.String"))
+ Dtable.Columns.Add("BRANCH", Type.GetType("System.String"))
+ Dtable.Columns.Add("IFSCODE", Type.GetType("System.String"))
+ Dtable.Columns.Add("SALARY", Type.GetType("System.String"))
+ Dtable.Columns.Add("EARNED_SALARY", Type.GetType("System.String"))
+ Dtable.Columns.Add("PF_SALARY", Type.GetType("System.String"))
+ Dtable.Columns.Add("ESI", Type.GetType("System.String"))
+ Dtable.Columns.Add("PF", Type.GetType("System.String"))
+ Dtable.Columns.Add("LEAVE_LATEFINE", Type.GetType("System.String"))
+ Dtable.Columns.Add("DEBIT", Type.GetType("System.String"))
+ Dtable.Columns.Add("INCENTIVE", Type.GetType("System.String"))
+ Dtable.Columns.Add("OT_INCENTIVE", Type.GetType("System.String"))
+ Dtable.Columns.Add("NET_PAY", Type.GetType("System.String"))
+ Dtable.Columns.Add("No_of_working_days", Type.GetType("System.String"))
+ Dtable.Columns.Add("NO_OF_DAYS_WORKED", Type.GetType("System.String"))
+ 
+ 
+ 
+ 'Dim SLNO = ds.Tables(0).Rows(irow)("SLNO")
+Dim SECNO = ds.Tables(0).Rows(irow)("SECNO")
+Dim DOJ = ds.Tables(0).Rows(irow)("DOJ")
+Dim NAME = ds.Tables(0).Rows(irow)("NAME")
+Dim DESIGNATION = ds.Tables(0).Rows(irow)("DESIGNATION")
+Dim EMPNO = ds.Tables(0).Rows(irow)("EMPNO")
+Dim ESINO = ds.Tables(0).Rows(irow)("ESINO")
+Dim UAN = ds.Tables(0).Rows(irow)("UAN")
+Dim PFNO = ds.Tables(0).Rows(irow)("PFNO")
+Dim AC_NO = ds.Tables(0).Rows(irow)("AC_NO")
+Dim BRANCH = ds.Tables(0).Rows(irow)("BRANCH")
+Dim IFSCODE = ds.Tables(0).Rows(irow)("IFSCODE")
+Dim SALARY = ds.Tables(0).Rows(irow)("SALARY")
+Dim EARNED_SALARY = ds.Tables(0).Rows(irow)("EARNED_SALARY")
+Dim PF_SALARY = ds.Tables(0).Rows(irow)("PF_SALARY")
+Dim ESI = ds.Tables(0).Rows(irow)("ESI")
+Dim PF = ds.Tables(0).Rows(irow)("PF")
+Dim LEAVE_LATEFINE = ds.Tables(0).Rows(irow)("LEAVE_LATEFINE")
+Dim DEBIT = ds.Tables(0).Rows(irow)("DEBIT")
+Dim INCENTIVE = ds.Tables(0).Rows(irow)("INCENTIVE")
+Dim OT_INCENTIVE = ds.Tables(0).Rows(irow)("OT_INCENTIVE")
+Dim NET_PAY = ds.Tables(0).Rows(irow)("NET_PAY")
+Dim No_of_working_days = ds.Tables(0).Rows(irow)("No_of_working_days")
+Dim NO_OF_DAYS_WORKED = ds.Tables(0).Rows(irow)("NO_OF_DAYS_WORKED")
+
+
+'Dtable.Rows(irows)("SLNO") =SLNO 
+Dtable.Rows(irows)("SECNO") =SECNO 
+Dtable.Rows(irows)("DOJ") =DOJ 
+Dtable.Rows(irows)("NAME") =NAME 
+Dtable.Rows(irows)("DESIGNATION") =DESIGNATION 
+Dtable.Rows(irows)("EMPNO") =EMPNO 
+Dtable.Rows(irows)("ESINO") =ESINO 
+Dtable.Rows(irows)("UAN") =UAN 
+Dtable.Rows(irows)("PFNO") =PFNO 
+Dtable.Rows(irows)("AC_NO") =AC_NO 
+Dtable.Rows(irows)("BRANCH") =BRANCH 
+Dtable.Rows(irows)("IFSCODE") =IFSCODE 
+Dtable.Rows(irows)("SALARY") =SALARY 
+Dtable.Rows(irows)("EARNED_SALARY") =EARNED_SALARY 
+Dtable.Rows(irows)("PF_SALARY") =PF_SALARY 
+Dtable.Rows(irows)("ESI") =ESI 
+Dtable.Rows(irows)("PF") =PF 
+Dtable.Rows(irows)("LEAVE_LATEFINE") =LEAVE_LATEFINE 
+Dtable.Rows(irows)("DEBIT") =DEBIT 
+Dtable.Rows(irows)("INCENTIVE") =INCENTIVE 
+Dtable.Rows(irows)("OT_INCENTIVE") =OT_INCENTIVE 
+Dtable.Rows(irows)("NET_PAY") =NET_PAY 
+Dtable.Rows(irows)("No_of_working_days") =No_of_working_days 
+Dtable.Rows(irows)("NO_OF_DAYS_WORKED") =NO_OF_DAYS_WORKED 
