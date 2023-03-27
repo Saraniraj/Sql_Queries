@@ -1,0 +1,158 @@
+
+
+    Public Function GetIns_Mechanic_HelperLink_Details(Optional ByVal mvarEntryNo As String = "",
+                                    Optional ByVal mvarAuthorize As String = "",
+                                    Optional ByVal mvarDeleteMode As String = "",
+                                    Optional ByVal mFilterData As String = "") As DataSet
+
+        Try
+            com = New OleDbCommand
+            ds = New DataSet
+            da = New OleDbDataAdapter
+            con = New OleDbConnection(GetConnection(mvarDbasename))
+            Try
+                com.CommandText = "sp_GetIns_Mechanic_HelperLink_Details"
+                com.CommandType = CommandType.StoredProcedure
+                com.Connection = con
+                com.Parameters.Add("@Comp_Code", OleDbType.VarChar, 20).Value = mvarCompanyCode
+                com.Parameters.Add("@Location_Code", OleDbType.VarChar, 20).Value = mvarLocationCode
+                'com.Parameters.Add("@Fin_Year_Code", OleDbType.VarChar, 10).Value = mvarFinYearCode
+                com.Parameters.Add("@Trans_No", OleDbType.VarChar, 100).Value = mvarEntryNo
+                com.Parameters.Add("@Att_date", OleDbType.VarChar, 100).Value = mvarAuthorize
+                com.Parameters.Add("@Filter_Data", OleDbType.VarChar, 150).Value = mFilterData
+                da = New OleDbDataAdapter(com)
+                da.Fill(ds)
+                da.Dispose()
+                com.Dispose()
+                con.Dispose()
+            Catch ex As Exception
+                Show_Message(ex.Message)
+                da.Dispose()
+                com.Dispose()
+                con.Dispose()
+            End Try
+            Return ds
+        Catch ex As Exception
+            Throw New Exception(ex.Message)
+        End Try
+    End Function
+
+    Public Function Save_Ins_Mechanic_HelperLink_Main(ByVal mSaveString As String, ByVal mScreenMode As String, ByVal mobjGrid As C1FlexGridClassic, ByVal mNumberType As String) As String
+        Dim mInputParam As String() = Split(mSaveString, "||")
+        Dim SuccessFlag As Integer = 0
+        Dim mReceiptNo As String = ""
+
+        If mInputParam(0).Trim = "" Then
+            mReceiptNo = GetAutoNumber(1, mNumberType, "Mechanic Incentive Entry")
+        Else
+            mReceiptNo = mInputParam(0)
+        End If
+
+        If Trim(mReceiptNo) = "" Or mobjGrid.Rows <= 0 Then
+            Return "Error"
+            Exit Function
+        End If
+
+        com = New OleDbCommand
+        con = New OleDbConnection(GetConnection(mvarDbasename))
+        Try
+            con.Open()
+            com.CommandText = "sp_Save_Ins_Mechanic_HelperLink_Main"
+            com.CommandType = CommandType.StoredProcedure
+            com.Connection = con
+            com.Parameters.Add("@Comp_Code", OleDbType.VarChar, 20).Value = mvarCompanyCode
+            com.Parameters.Add("@Location_Code", OleDbType.VarChar, 20).Value = mvarLocationCode
+            com.Parameters.Add("@Entry_No", OleDbType.VarChar, 100).Value = mReceiptNo
+            com.Parameters.Add("@Entry_Date	", OleDbType.VarChar, 100).Value = mInputParam(1)
+            com.Parameters.Add("@Catcode", OleDbType.VarChar, 100).Value = mInputParam(2)
+            com.Parameters.Add("@Earn_Name", OleDbType.VarChar, 150).Value = mInputParam(3)
+            com.Parameters.Add("@Tot_Amount", OleDbType.VarChar, 100).Value = mInputParam(4)
+            com.Parameters.Add("@Others", OleDbType.VarChar, 100).Value = mInputParam(5)
+            com.Parameters.Add("@Authorize", OleDbType.VarChar, 1).Value = "0"
+            com.Parameters.Add("@Delete_Mode", OleDbType.VarChar, 1).Value = "0"
+            com.Parameters.Add("@Screen_Mode", OleDbType.VarChar, 20).Value = mScreenMode
+            com.Parameters.Add("@User_Code", OleDbType.VarChar, 15).Value = mvarUserID
+            Dim OutParam As OleDbParameter = New OleDbParameter("@iSuccessFlag", OleDbType.Integer)
+            OutParam.Direction = ParameterDirection.Output
+            com.Parameters.Add(OutParam)
+            com.ExecuteNonQuery()
+
+            If com.Parameters("@iSuccessFlag").Value = 1 Then
+                SuccessFlag = 0
+                SuccessFlag = Save_Ins_MechanicIncentiveEntry_Line(mReceiptNo, mInputParam(1), mInputParam(2), mobjGrid, mScreenMode)
+                If SuccessFlag = 0 Then
+                    Return "Error"
+                End If
+            Else
+                Return "Error"
+            End If
+            com.Dispose()
+            con.Dispose()
+            da.Dispose()
+        Catch ex As Exception
+            Show_Message(ex.Message)
+            da.Dispose()
+            com.Dispose()
+            con.Dispose()
+        End Try
+        Return mReceiptNo
+    End Function
+    Private Function Save_Ins_Mechanic_HelperLink_Line(ByVal mReceiptNo As String, ByVal mReceiptDate As String, ByVal mAttDate As String, ByVal mobjGrid As C1FlexGridClassic, ByVal mScreenMode As String) As Long
+        Dim SuccessFlag As Integer = 0
+        com = New OleDbCommand
+        con = New OleDbConnection(GetConnection(mvarDbasename))
+        Try
+            If Trim(mReceiptNo) = "" Or mobjGrid.Rows <= 0 Then
+                Return SuccessFlag
+            End If
+
+            com.CommandText = "sp_Save_Ins_Mechanic_HelperLink_Line"
+            com.CommandType = CommandType.StoredProcedure
+            com.Connection = con
+            Dim msno As Integer = 0
+
+            For iRow As Integer = 1 To mobjGrid.Rows - 1
+                msno = msno + 1
+                con.Open()
+                com.Parameters.Clear()
+                com.Parameters.Add("@Comp_Code", OleDbType.VarChar, 20).Value = mvarCompanyCode
+                com.Parameters.Add("@Location_Code", OleDbType.VarChar, 20).Value = mvarLocationCode
+                com.Parameters.Add("@Entry_No", OleDbType.VarChar, 100).Value = mReceiptNo
+                com.Parameters.Add("@Entry_Date", OleDbType.VarChar, 100).Value = mReceiptDate
+                com.Parameters.Add("@Sno", OleDbType.VarChar, 100).Value = msno
+                com.Parameters.Add("@Mech_EmpCode", OleDbType.VarChar, 250).Value = Trim(mobjGrid.get_TextMatrix(iRow, 1))
+                com.Parameters.Add("@Mech_EmpID", OleDbType.VarChar, 250).Value = Trim(mobjGrid.get_TextMatrix(iRow, 2))
+                com.Parameters.Add("@Mech_EmpName", OleDbType.VarChar, 250).Value = mobjGrid.get_TextMatrix(iRow, 3)
+                com.Parameters.Add("@Mech_Percentage", OleDbType.VarChar, 250).Value = Val(mobjGrid.get_TextMatrix(iRow, 4))
+                com.Parameters.Add("@Helper_EmpCode", OleDbType.VarChar, 250).Value = Val(mobjGrid.get_TextMatrix(iRow, 5))
+                com.Parameters.Add("@Helper_EmpID", OleDbType.VarChar, 250).Value = Val(mobjGrid.get_TextMatrix(iRow, 6))
+                com.Parameters.Add("@Helper_EmpName", OleDbType.VarChar, 250).Value = Val(mobjGrid.get_TextMatrix(iRow, 7))
+                com.Parameters.Add("@Helper_Percentage", OleDbType.VarChar, 250).Value = Val(mobjGrid.get_TextMatrix(iRow, 8))
+               
+                com.Parameters.Add("@Authorize", OleDbType.VarChar, 1).Value = "0"
+                com.Parameters.Add("@Delete_Mode", OleDbType.VarChar, 1).Value = "0"
+                com.Parameters.Add("@Screen_Mode", OleDbType.VarChar, 20).Value = mScreenMode
+                com.Parameters.Add("@User_Code", OleDbType.VarChar, 15).Value = mvarUserID
+                Dim parm As OleDbParameter = New OleDbParameter("@iSuccessFlag", OleDbType.Integer)
+                parm.Direction = ParameterDirection.Output
+                com.Parameters.Add(parm)
+                com.ExecuteNonQuery()
+
+                If com.Parameters("@iSuccessFlag").Value = 1 Then
+                    SuccessFlag = 1
+                Else
+                    SuccessFlag = 0
+                End If
+                con.Close()
+            Next
+            com.Dispose()
+            con.Dispose()
+            da.Dispose()
+        Catch ex As Exception
+            Show_Message(ex.Message)
+            da.Dispose()
+            com.Dispose()
+            con.Dispose()
+        End Try
+        Return SuccessFlag
+    End Function
