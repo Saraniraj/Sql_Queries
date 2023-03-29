@@ -1,0 +1,31 @@
+Comp_Code 	String	50
+WkDay 	String	50
+EmpCode 	String	50
+Empname 	String	50
+sex	 	String	50
+Empid	 	String	50
+catname	 	String	50
+Deptname 	String	50
+DesgnName 	String	50
+status 	String	50
+statusname 	String	50
+sdate 		DateTime
+MON_IN 	String	50
+MON_OUT 	String	50
+TUE_IN 	String	50
+TUE_OUT 	String	50
+WED_IN	 	String	50
+WED_OUT	 	String	50
+THU_IN 	String	50
+THU_OUT	 	String	50
+FRI_IN 	String	50
+FRI_OUT	 	String	50
+SAT_IN	 	String	50
+SAT_OUT 	String	50
+SUN_IN	 	String	50
+SUN_OUT	 	String	50
+InTime 	String	50
+OutTime 	String	50
+RailInTime 	String	50
+ Total	 	String	50
+Day_Name_From_Date 	String	50

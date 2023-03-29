@@ -1,0 +1,131 @@
+ Private Sub c1fgRight_AfterEdit(ByVal sender As System.Object, ByVal e As C1.Win.C1FlexGrid.RowColEventArgs) Handles c1fgItems.AfterEdit
+ 
+   Dim mFS As Double = 0
+ Dim mPS As Double = 0
+ Dim mGS As Double = 0
+ Dim mMJ As Double = 0
+ Dim mAW As Double = 0
+ Dim mPDI_ins As Double = 0
+ Dim mFIT_ins As Double = 0
+ Dim mws_ins As Double = 0
+ Dim mDEMO_ins As Double = 0
+ Dim mLABOUR_ins As Double = 0
+ Dim mSPARES_ins As Double = 0
+
+
+
+        If c1fgItems.RowSel < c1fgItems.Rows Then
+            If c1fgItems.ColSel <= c1fgItems.Cols - 1 Then
+                c1fgItems.KeyActionEnter = C1.Win.C1FlexGrid.KeyActionEnum.MoveAcross
+                Dim mrout = c1fgItems.ColSel
+
+                If (c1fgItems.ColSel >= 4 Or c1fgItems.ColSel <= 12) Then
+                                                
+                   ds = Nothing
+                    ds = New DataSet
+                    SSQL = ""
+                    SSQL &= Fun_Ins_JobcardIncentive()
+
+                    ds = ReturnMultipleValue(SSQL, mvarDbasename)
+                    If ds.Tables(0).Rows.Count <= 0 Then
+                        '  Show_Message("Please Enter  Job Card Incentive Master.")
+                    Else
+mFS  = ds.Tables(0).Rows(0)("FS")
+mPS= ds.Tables(0).Rows(0)("PS")
+mGS= ds.Tables(0).Rows(0)("GS")
+mMJ= ds.Tables(0).Rows(0)("MJ")
+mAW= ds.Tables(0).Rows(0)("AW")
+mPDI_ins= ds.Tables(0).Rows(0)("PDI_ins")
+mFIT_ins= ds.Tables(0).Rows(0)("FIT_ins")
+mws_ins= ds.Tables(0).Rows(0)("ws_ins")
+mDEMO_ins= ds.Tables(0).Rows(0)("DEMO_ins")
+mLABOUR_ins= ds.Tables(0).Rows(0)("LABOUR_ins")
+mSPARES_ins= ds.Tables(0).Rows(0)("SPARES_ins")
+
+                        
+                    End If
+                                                
+                    Dim FreeService As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 4))
+                    Dim PaidService As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 5))
+                    Dim GeneralService As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 6))
+                    Dim MinorJOB As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 7))
+                    Dim AccidentWork As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 8))
+                    Dim PDI As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 9))
+                    Dim Fit As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 10))
+                    Dim WaterService As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 11))
+                    Dim Demo As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, 12))
+
+                    Dim TOTAL As Double = Math.Round((FreeService + PaidService + GeneralService + MinorJOB + AccidentWork), 0)
+
+Dim mFreeService As Double =0
+Dim mPaidService As Double = 0
+Dim mGeneralService As Double = 0
+Dim mMinorJOB As Double = 0
+Dim mAccidentWork As Double = 0
+Dim mPDI As Double = 0
+Dim mFit As Double = 0
+Dim mWaterService As Double = 0
+Dim mDemo As Double = 0
+                                                
+                                                
+                    If FreeService > 0 Then
+                        mfreeservice = FreeService * mFS
+                    End If       
+                     If PaidService > 0 Then
+                        mPaidService = PaidService * mPS
+                    End If
+                     If GeneralService > 0 Then
+                        mGeneralService = GeneralService * mGS
+                    End If
+     If MinorJOB > 0 Then
+                        mMinorJOB = MinorJOB * mMJ
+                    End If
+     If AccidentWork > 0 Then
+                        mAccidentWork = AccidentWork * mAW
+                    End If
+     If PDI > 0 Then
+                        mPDI = PDI * mPDI_ins
+                    End If
+     If Fit > 0 Then
+                        mFit = Fit * mFIT_ins
+                    End If      
+ If WaterService > 0 Then
+                        mWaterService = WaterService * mws_ins
+                    End If 
+ If Demo > 0 Then
+                        mDemo = Demo * mDEMO_ins
+                    End If 
+
+ Dim mincentive As Double = Math.Round((mfreeservice + mPaidService + mGeneralService + mMinorJOB + mAccidentWork + mPDI + mFit + mWaterService + mDemo ), 0)
+                    c1fgItems.set_TextMatrix(c1fgItems.RowSel, 16, mincentive)                          
+
+                    c1fgItems.set_TextMatrix(c1fgItems.RowSel, 13, TOTAL)
+
+                    'Dim Allowance As Double = Val(c1fgItems.get_TextMatrix(c1fgItems.RowSel, c1fgItems.ColSel))
+                    'Dim OTher_Amount As Double = Allowance
+                    'c1fgItems.set_TextMatrix(c1fgItems.RowSel, c1fgItems.ColSel, OTher_Amount)
+
+                    'With c1fgItems
+                    '    Dim NewStyle1 As C1.Win.C1FlexGrid.CellStyle
+                    '    NewStyle1 = .Styles.Add("NewStyle1")
+                    '    NewStyle1.BackColor = System.Drawing.Color.AliceBlue
+                    '    .SetCellStyle(e.Row, e.Col, NewStyle1)
+                    'End With
+
+                    Calculate_Charges()
+                Else
+                    'c1fgRight.set_TextMatrix(c1fgRight.RowSel, 8, "")
+                    Exit Sub
+
+                End If
+            End If
+            Exit Sub
+        Else
+            If (c1fgItems.RowSel = c1fgItems.Rows - 1 And c1fgItems.ColSel = c1fgItems.Cols - 1) Then
+                c1fgItems.Rows = c1fgItems.Rows + 1
+                c1fgItems.Select(c1fgItems.RowSel + 1, 0)
+                c1fgItems.KeyActionEnter = C1.Win.C1FlexGrid.KeyActionEnum.MoveDown
+            End If
+            Exit Sub
+        End If
+    End Sub
