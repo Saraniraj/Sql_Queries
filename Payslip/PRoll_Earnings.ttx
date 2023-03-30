@@ -1,6 +1,0 @@
-Comp_Code 	String	50
-EmpCode 	String	50
-EmpName		String	50
-Type		String	50
-Wages		number
-Amount		number
