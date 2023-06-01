@@ -1,0 +1,76 @@
+Private Sub LoadSpreadExist()
+    vaSpread1.MaxRows = 0
+    vaSpread1.MaxRows = rs.RecordCount
+    rs.Requery
+    i = 0
+    Do While Not rs.EOF
+        i = i + 1
+        With vaSpread1
+            '.SetText 1, i, CStr(rs.Fields("EmpCode"))
+            .SetText 1, i, CStr(rs.Fields("Ecode"))
+            .SetText 2, i, CStr(rs.Fields("EmpName"))
+            .SetText 3, i, CStr(rs.Fields("Dept"))
+            
+            .Col = 3
+            .Lock = True
+
+            .SetText 4, i, Format(rs.Fields("DayHour"), "0.000")
+            If Not IsNull(rs.Fields("Ot")) Then
+                .SetText 5, i, CStr(rs.Fields("Ot"))
+            Else
+                .SetText 5, i, CStr(0#)
+            End If
+'''            If rs!CLDays > 0 Then
+'''                .SetText 6, I, CStr(rs!CLDays)
+'''            Else
+                .SetText 6, i, CStr(0#)
+''''            End If
+            
+''''            If rs!ELDays > 0 Then
+''''                .SetText 7, I, CStr(rs!ELDays)
+''''            Else
+                .SetText 7, i, CStr(0#)
+''''            End If
+            
+            .Col = 6
+            .Lock = True
+            
+            .Col = 7
+            .Lock = True
+            
+            If rs!Inc1 > 0 Then
+                .SetText 8, i, CStr(rs!Inc1)
+            End If
+            
+            If rs!Ded1 > 0 Then
+                .SetText 9, i, CStr(rs!Ded1)
+            End If
+            
+            If rs!Ded2 > 0 Then
+                .SetText 10, i, CStr(rs!Ded2)
+            End If
+            
+            If rs!Ded3 > 0 Then
+                .SetText 11, i, CStr(rs!Ded3)
+            End If
+            
+            If rs!HR > 0 Then
+                .SetText 12, i, CStr(rs!HR)
+            End If
+            
+            If rs!OTH > 0 Then
+                .SetText 13, i, CStr(rs!OTH)
+            End If
+            If rs!ntinc > 0 Then
+                .SetText 14, i, CStr((rs!ntinc))
+            End If
+            If (rs!Basic + rs!da + rs!Wa + rs!HRA) > 0 And rs!SALARYTYPE = 0 Then
+                .SetText 15, i, CStr(Format(Round((rs!Basic + rs!da + rs!Wa + rs!HRA) / 30, 2), "#0.00"))
+            Else
+                .SetText 15, i, CStr(Format(Round(rs!Basic + rs!da + rs!HRA + rs!Wa, 2), "#0.00"))
+            End If
+        
+        End With
+        rs.MoveNext
+    Loop
+End Sub

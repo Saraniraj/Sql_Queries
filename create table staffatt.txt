@@ -1,0 +1,28 @@
+USE [TGKPayV2]
+GO
+
+/****** Object:  Table [dbo].[staffatt]    Script Date: 30-03-2023 17:36:39 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[staffatt](
+	[Month] [nvarchar](2) NULL,
+	[Year] [smallint] NULL,
+	[EmpCode] [int] NULL,
+	[DayHour] [real] NULL,
+	[Ot] [float] NULL,
+	[Inc1] [float] NULL,
+	[Ded1] [float] NULL,
+	[Ded2] [float] NULL,
+	[Ded3] [float] NULL,
+	[HR] [real] NULL,
+	[Oth] [numeric](5, 0) NULL,
+	[NtInc] [int] NULL
+) ON [PRIMARY]
+
+GO
+
+

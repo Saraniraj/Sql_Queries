@@ -1,0 +1,106 @@
+USE [TGKPayV2]
+GO
+
+/****** Object:  Table [dbo].[empmas]    Script Date: 29-03-2023 18:01:25 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[empmas](
+	[empcode] [int] NULL,
+	[EmpName] [nvarchar](40) NULL,
+	[EmpCat] [nvarchar](8) NULL,
+	[FaName] [nvarchar](30) NULL,
+	[TicketNo] [nvarchar](10) NULL,
+	[Sex] [tinyint] NULL,
+	[DOB] [datetime] NULL,
+	[DOJ] [datetime] NULL,
+	[PFNo] [nvarchar](40) NULL,
+	[ESINo] [nvarchar](50) NULL,
+	[Dispensary] [nvarchar](15) NULL,
+	[PFCat] [tinyint] NULL,
+	[ESICat] [tinyint] NULL,
+	[LICCat] [tinyint] NULL,
+	[DACat] [tinyint] NULL,
+	[BonusCat] [tinyint] NULL,
+	[Status] [nvarchar](3) NULL,
+	[IFSCCode] [nvarchar](20) NULL,
+	[CertNo] [nvarchar](18) NULL,
+	[CardNO] [nvarchar](18) NULL,
+	[CardOwner] [nvarchar](18) NULL,
+	[Working] [bit] NOT NULL,
+	[WeeklyOff] [tinyint] NULL,
+	[Ecode] [int] NULL,
+	[SalaryType] [int] NULL,
+	[GrossSalary] [numeric](18, 2) NULL,
+	[Basic] [numeric](18, 2) NULL,
+	[HRA] [numeric](18, 2) NULL,
+	[DA] [numeric](18, 2) NULL,
+	[WA] [numeric](18, 2) NULL,
+	[GraceDays] [bit] NOT NULL,
+	[UnitCode] [smallint] NULL,
+	[Add1] [nvarchar](50) NULL,
+	[add2] [nvarchar](50) NULL,
+	[add3] [nvarchar](50) NULL,
+	[add4] [nvarchar](50) NULL,
+	[State] [varchar](20) NULL,
+	[PHONE] [nvarchar](20) NULL,
+	[bloodgroup] [nvarchar](5) NULL,
+	[recomby] [nvarchar](50) NULL,
+	[DOR] [datetime] NULL,
+	[Bank] [int] NOT NULL,
+	[DeptCode] [smallint] NULL,
+	[DesgCode] [smallint] NULL,
+	[DiviCode] [smallint] NULL,
+	[CDeptCode] [smallint] NULL,
+	[pfdate] [datetime] NULL,
+	[ESIDATE] [datetime] NULL,
+	[pfrjdate] [datetime] NULL,
+	[esirjdate] [datetime] NULL,
+	[banker] [int] NULL,
+	[edlicode] [int] NULL,
+	[PAYCAT] [int] NULL,
+	[SALCAT] [int] NULL,
+	[GGCANO] [int] NULL,
+	[EDLINO] [int] NULL,
+	[REASON] [int] NULL,
+	[GGCAYEAR] [int] NULL,
+	[EDLIYEAR] [int] NULL,
+	[pfno1] [numeric](6, 0) NULL,
+	[edlistat] [numeric](1, 0) NULL,
+	[ggcastat] [numeric](1, 0) NULL,
+	[CONSTAT] [varchar](1) NULL,
+	[CONSALARY] [numeric](10, 0) NULL,
+	[UANNO] [numeric](18, 0) NULL,
+	[UANSTAT] [char](1) NULL,
+	[Pincode] [varchar](10) NULL,
+	[ggcapolno] [numeric](18, 0) NULL,
+	[AADHAAR] [nvarchar](15) NULL,
+	[wagecalstat] [varchar](1) NULL,
+	[Aadhaarno] [numeric](18, 0) NULL,
+	[erpno] [numeric](18, 0) NULL,
+	[DOPFJ] [datetime] NULL,
+	[DOP] [datetime] NULL,
+	[DOPFL] [datetime] NULL,
+	[MStat] [varchar](10) NULL,
+	[FHStat] [varchar](10) NULL,
+	[Dist] [int] NULL,
+	[HostalStat] [varchar](20) NULL,
+	[RoomNo] [int] NULL,
+	[Sal_Cat_type] [int] NULL,
+	[F12_Sno] [int] NULL,
+	[WH_DAY] [int] NULL,
+	[Retired_date] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
